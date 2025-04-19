@@ -5,6 +5,8 @@ const authRoutes = require('./routes/user.routes');
 const movieRoutes = require('./routes/movie.routes');
 const genreRoutes = require('./routes/genre.routes');
 const hallRoutes = require('./routes/hall.routes');
+const sessionRoutes = require('./routes/session.routes');
+const ticketRoutes = require('./routes/ticket.routes');
 
 require('dotenv').config();
 
@@ -21,6 +23,8 @@ app.use('/api/auth', authRoutes);
 app.use('/api/movies', movieRoutes);
 app.use('/api/genres', genreRoutes);
 app.use('/api/halls', hallRoutes);
+app.use('/api/sessions', sessionRoutes);
+app.use('/api/tickets', ticketRoutes);
 
 
 // Тест корінного ендпоінта
