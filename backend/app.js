@@ -7,6 +7,11 @@ const genreRoutes = require('./routes/genre.routes');
 const hallRoutes = require('./routes/hall.routes');
 const sessionRoutes = require('./routes/session.routes');
 const ticketRoutes = require('./routes/ticket.routes');
+const paymentRoutes = require('./routes/payment.routes');
+const adminRoutes = require('./routes/admin.routes');
+const commentRoutes = require('./routes/comment.routes');
+const ratingRoutes = require('./routes/rating.routes');
+
 
 require('dotenv').config();
 
@@ -25,6 +30,10 @@ app.use('/api/genres', genreRoutes);
 app.use('/api/halls', hallRoutes);
 app.use('/api/sessions', sessionRoutes);
 app.use('/api/tickets', ticketRoutes);
+app.use('/api/payments', paymentRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api', commentRoutes);
+app.use('/api', ratingRoutes);
 
 
 // Тест корінного ендпоінта
