@@ -1,7 +1,4 @@
-const path = require('path');
-require('dotenv').config({ 
-  path: path.join(__dirname, '../../.env') 
-});
+require('dotenv').config();
 const mysql = require('mysql2/promise');
 
 const pool = mysql.createPool({
@@ -13,6 +10,5 @@ const pool = mysql.createPool({
 console.log('DB_USER:', process.env.DB_USER);
 console.log('DB_PASSWORD:', process.env.DB_PASSWORD);
 console.log('DB_NAME:', process.env.DB_NAME);
-
 
 module.exports = pool;
