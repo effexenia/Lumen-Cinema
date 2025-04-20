@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-const db = require('../db');
+const db = require('../config/db');
 
 exports.getHalls = async (req, res) => {
   try {
