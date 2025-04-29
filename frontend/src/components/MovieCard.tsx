@@ -1,25 +1,32 @@
-// components/MovieCard.tsx
-import { Card, CardMedia, CardContent, Typography } from '@mui/material';
-import { Movie } from '../types/movie';
 import React from 'react';
+import './MovieCard.css';
 
-export const MovieCard = ({ movie }: { movie: Movie }) => {
+interface Genre {
+  id: number;
+  name: string;
+}
+
+interface MovieCardProps {
+  title: string;
+  description: string;
+  posterImg: string;
+  genres: Genre[];
+}
+
+const MovieCard: React.FC<MovieCardProps> = ({ title, description, posterImg, genres }) => {
+  const isFullUrl = posterImg.startsWith('http://') || posterImg.startsWith('https://');
+  const fullPosterUrl = isFullUrl ? posterImg : `http://localhost:5000/${posterImg}`;
+
   return (
-    <Card sx={{ backgroundColor: '#1e1e1e', maxWidth: 220 }}>
-      <CardMedia
-        component="img"
-        image={movie.posterUrl}
-        alt={movie.title}
-        sx={{ height: 320 }}
-      />
-      <CardContent>
-        <Typography variant="subtitle1" fontWeight="bold" noWrap>
-          {movie.title}
-        </Typography>
-        <Typography variant="body2" color="gray">
-          ⭐ {movie.rating} · {new Date(movie.releaseDate).getFullYear()}
-        </Typography>
-      </CardContent>
-    </Card>
+    <div className="movie-card">
+      <img src={fullPosterUrl} alt={title} className="movie-card__image" />
+      <div className="movie-card__info">
+      <p>{genres?.map((genre) => genre.name).join(' • ')}</p>
+        <h3>{title}</h3>
+        <p>{description}</p>
+      </div>
+    </div>
   );
 };
+
+export default MovieCard;

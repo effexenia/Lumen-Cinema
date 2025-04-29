@@ -1,0 +1,84 @@
+/* Загальний стиль */
+.header {
+    background-color: #111110; /* Темний фон */
+    padding: 10px 20px;
+  }
+  
+  /* Контейнер для елементів */
+  .header__container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  /* Логотип */
+  .header__logo {
+    font-size: 24px;
+    font-weight: bold;
+    color: #FFD700; /* Золотий */
+    text-decoration: none;
+    
+  }
+  
+  .header__logo span {
+    color: white; /* Можна зробити "Cinema" білим */
+  }
+  
+  .header__logo img {
+    width: 200px;
+    height: 100px;
+    margin-right: 8px;
+  }
+  /* Навігація */
+  .header__nav {
+    display: flex;
+    gap: 30px;
+  }
+  
+  .header__link {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    position: relative;
+  }
+  
+  .header__link:hover {
+    color: #FFD700;
+  }
+
+  .header__link::after {
+    content: "";
+    display: block;
+    width: 0;
+    height: 2px;
+    background: #FFD700; /* Золотая линия */
+    transition: width 0.3s;
+    position: absolute;
+    bottom: -4px; /* чуть ниже текста */
+    left: 0;
+  }
+  .header__link.active {
+  color: #FFD700;
+}
+
+.header__link.active::after {
+  width: 100%;
+}
+  .header__link:hover::after {
+    width: 100%;
+  }
+  /* Пошук */
+  .header__search input {
+    padding: 5px 10px;
+    background-color: #1a1a1a;
+    border: 1px solid #FFD700;
+    border-radius: 12px;
+    color: white;
+  }
+  
+  .header__search input::placeholder {
+    color: #aaa;
+  }
+  
