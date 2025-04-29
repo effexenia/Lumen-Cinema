@@ -1,0 +1,85 @@
+/* === MOVIE SLIDER === */
+.movie-slider {
+    position: relative;
+    background-size: cover;
+    background-position: center;
+    padding: 80px 40px;
+    color: white;
+    height: 600px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .movie-slider__content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+  }
+  
+  .movie-slider__info {
+    max-width: 600px;
+  }
+  
+  .movie-slider__info h1 {
+    font-size: 48px;
+    margin-bottom: 16px;
+  }
+  
+  .movie-slider__info p {
+    font-size: 16px;
+    margin-bottom: 24px;
+    color: #ccc;
+  }
+  
+  .movie-slider__buttons .btn-primary,
+  .movie-slider__buttons .btn-secondary {
+    padding: 10px 20px;
+    margin-right: 12px;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+  }
+  
+  .btn-primary {
+    background-color: #FFD700;
+    color: #111;
+  }
+  
+  .btn-secondary {
+    background: transparent;
+    border: 1px solid #FFD700;
+    color: #FFD700;
+  }
+  
+  .movie-slider__poster {
+    width: 220px;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+  }
+  
+  .movie-slider__dots {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+  }
+  
+  .movie-slider__dots .dot {
+    width: 10px;
+    height: 10px;
+    background: #777;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+  
+  .movie-slider__dots .dot.active {
+    background: #FFD700;
+  }
+  

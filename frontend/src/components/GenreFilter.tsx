@@ -1,5 +1,11 @@
+import React, { useEffect, useState } from 'react';
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
-import React from 'react';
+import axios from 'axios';
+
+interface Genre {
+  id: number;
+  name: string;
+}
 
 type GenreFilterProps = {
   genre: string;
@@ -7,6 +13,16 @@ type GenreFilterProps = {
 };
 
 export const GenreFilter: React.FC<GenreFilterProps> = ({ genre, setGenre }) => {
+  const [genres, setGenres] = useState<Genre[]>([]);
+
+  useEffect(() => {
+    const fetchGenres = async () => {
+      const res = await axios.get('http://localhost:5000/api/genres');
+      setGenres(res.data);
+    };
+    fetchGenres();
+  }, []);
+
   return (
     <FormControl fullWidth>
       <InputLabel id="genre-label">Жанр</InputLabel>
@@ -17,13 +33,11 @@ export const GenreFilter: React.FC<GenreFilterProps> = ({ genre, setGenre }) => 
         onChange={(e) => setGenre(e.target.value)}
       >
         <MenuItem value="">Усі жанри</MenuItem>
-        <MenuItem value="action">Action</MenuItem>
-        <MenuItem value="comedy">Comedy</MenuItem>
-        <MenuItem value="fantasy">Fantasy</MenuItem>
-        <MenuItem value="sci-fi">Sci-fi</MenuItem>
-        <MenuItem value="thriller">Thriller</MenuItem>
-        {/* Додай свої жанри */}
+        {genres.map((g) => (
+          <MenuItem key={g.id} value={g.id}>{g.name}</MenuItem>
+        ))}
       </Select>
     </FormControl>
   );
 };
+

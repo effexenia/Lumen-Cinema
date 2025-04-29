@@ -5,27 +5,42 @@ const { validationResult } = require('express-validator');
 exports.getAllMovies = async (req, res) => {
   try {
     const { genre, search, sort } = req.query;
-    let query = 'SELECT * FROM movies WHERE 1=1';
+    let query = `
+      SELECT m.id, m.title, m.description, m.posterImg, m.release_date, m.bannerImg,
+        GROUP_CONCAT(g.name) AS genres
+      FROM movies m
+      LEFT JOIN movie_genres mg ON m.id = mg.movie_id
+      LEFT JOIN genres g ON mg.genre_id = g.id
+      WHERE 1=1
+    `;
     const params = [];
 
     if (genre) {
-      query += ' AND genre_id = ?';
+      query += ' AND g.id = ?';
       params.push(genre);
     }
 
     if (search) {
-      query += ' AND title LIKE ?';
+      query += ' AND m.title LIKE ?';
       params.push(`%${search}%`);
     }
 
     if (sort === 'date') {
-      query += ' ORDER BY release_date DESC';
+      query += ' ORDER BY m.release_date DESC';
     } else if (sort === 'title') {
-      query += ' ORDER BY title ASC';
+      query += ' ORDER BY m.title ASC';
     }
 
+    query += ' GROUP BY m.id'; // Группируем по фильму
+
     const [rows] = await pool.query(query, params);
-    res.json(rows);
+    // Парсим строку с жанрами в массив
+    const movies = rows.map(row => ({
+      ...row,
+      genres: row.genres ? row.genres.split(',').map(name => ({ name })) : []
+    }));
+
+    res.json(movies);
   } catch (err) {
     res.status(500).json({ message: 'Помилка при отриманні фільмів' });
   }

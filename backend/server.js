@@ -6,3 +6,4 @@ app.listen(PORT, () => {
   console.log(`Сервер запущено на порті ${PORT}`);
   console.log(`Доступно за адресою: http://localhost:${PORT}`);
 });
+

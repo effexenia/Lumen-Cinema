@@ -1,0 +1,41 @@
+  
+  /* === MOVIE GRID === */
+  .movie-grid {
+    background-color: #111;
+    padding: 60px 40px;
+    color: white;
+  }
+  
+  .movie-grid__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto 30px;
+  }
+  
+  .movie-grid__header h2 {
+    font-size: 28px;
+  }
+  
+  .filters {
+    display: flex;
+    gap: 12px;
+  }
+  
+  .filter-dropdown {
+    padding: 8px 12px;
+    background-color: #1a1a1a;
+    border: 1px solid #FFD700;
+    border-radius: 8px;
+    color: white;
+  }
+  
+  .movie-grid__list {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+  }
+  

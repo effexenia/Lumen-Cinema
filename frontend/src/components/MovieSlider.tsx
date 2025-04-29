@@ -1,47 +1,71 @@
-// components/MovieSlider.tsx
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { getAllMovies } from '../api/api.ts';
-import { Movie } from '../types/movie';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import 'swiper/css';
-import { Box, Typography } from '@mui/material';
-import React from 'react';
+import './MovieSlider.css';
 
-export const MovieSlider = () => {
+interface Movie {
+  id: number;
+  title: string;
+  description: string;
+  bannerImg: string; // для баннера большая картинка
+  posterImg: string; // для постера
+}
+
+const MovieSlider: React.FC = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  // Проверка, чтобы избежать ошибки, если posterImg или bannerImg не определены
+  const getFullImageUrl = (imageUrl: string) => {
+    if (!imageUrl) return ''; // Если URL не существует, возвращаем пустую строку
+    const isFullUrl = imageUrl.startsWith('http://') || imageUrl.startsWith('https://');
+    return isFullUrl ? imageUrl : `http://localhost:5000/${imageUrl}`;
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
+    const loadMovies = async () => {
       const data = await getAllMovies();
       setMovies(data);
     };
-    fetchData();
+
+    loadMovies();
   }, []);
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIndex(prev => (prev + 1) % movies.length);
+    }, 15000); // каждые 5 секунд смена
+
+    return () => clearInterval(interval);
+  }, [movies]);
+
+  if (!movies.length) return null;
+
+  const movie = movies[currentIndex];
+
   return (
-    <Box>
-      <Typography variant="h4" sx={{ mb: 2 }}>
-        🎬 Now in Cinema
-      </Typography>
-      <Swiper spaceBetween={16} slidesPerView={4}>
-        {movies.slice(0, 10).map((movie) => (
-          <SwiperSlide key={movie._id}>
-            <img
-              src={movie.posterUrl}
-              alt={movie.title}
-              style={{
-                borderRadius: '12px',
-                height: '400px',
-                width: '100%',
-                objectFit: 'cover',
-              }}
-            />
-            <Typography mt={1} textAlign="center">
-              {movie.title}
-            </Typography>
-          </SwiperSlide>
+    <section className="movie-slider" style={{ backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${getFullImageUrl(movie.bannerImg)})` }}>
+      <div className="movie-slider__content">
+        <div className="movie-slider__info">
+          <h1>{movie.title}</h1>
+          <p>{movie.description}</p>
+          <div className="movie-slider__buttons">
+            <button className="btn-primary">Book tickets</button>
+            <button className="btn-secondary">▶ Watch trailer</button>
+          </div>
+        </div>
+        <img src={getFullImageUrl(movie.posterImg)} alt={movie.title} className="movie-slider__poster" />
+      </div>
+      <div className="movie-slider__dots">
+        {movies.map((_, idx) => (
+          <span
+            key={idx}
+            className={`dot ${idx === currentIndex ? 'active' : ''}`}
+            onClick={() => setCurrentIndex(idx)}
+          />
         ))}
-      </Swiper>
-    </Box>
+      </div>
+    </section>
   );
 };
+
+export default MovieSlider;
