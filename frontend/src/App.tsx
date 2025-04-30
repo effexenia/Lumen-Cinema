@@ -4,6 +4,8 @@ import { Header } from "./components/Header.tsx";
 import Footer from "./components/Footer.tsx";
 import React from "react";
 import MoviePage from './pages/MoviePage/MoviePage.tsx'; 
+import LoginPopup from "./pages/LoginPage/LoginPopup.tsx";
+import RegisterPopup from "./pages/LoginPage/RegisterPopup.tsx";
 
 function App() {
   return (
@@ -16,6 +18,8 @@ function App() {
         <Route path="/profile" element={<ProfilePage />} />
           */}
         <Route path="/movie/:id" element={<MoviePage />}/>
+        <Route path="/login" element={<LoginPopup/>}/>
+        <Route path="/register" element={<RegisterPopup/>}/>
       </Routes>
       <Footer />
     </BrowserRouter>

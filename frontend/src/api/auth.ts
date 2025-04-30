@@ -9,3 +9,4 @@ export const getAuthToken = (): string => {
   export const isAuthenticated = (): boolean => {
     return !!localStorage.getItem('token');
   };
+  
