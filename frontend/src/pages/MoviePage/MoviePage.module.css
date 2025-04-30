@@ -1,0 +1,265 @@
+.page {
+    background-color: #111110;
+    color: white;
+    padding: 1rem;
+    min-height: 100vh;
+    font-family: sans-serif;
+  }
+  .loading {
+    text-align: center;
+    font-size: 20px;
+    padding: 40px;
+  }
+  .container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .page {
+    padding: 20px;
+    font-family: sans-serif;
+  }
+  
+  .loading {
+    text-align: center;
+    font-size: 20px;
+    padding: 40px;
+  }
+  
+  .banner {
+    position: relative;
+    height: 600px;
+    background-size: cover;
+    background-position: center;
+    color: white;
+    margin-bottom: 70px;
+  }
+  
+  .bannerOverlay {
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.75), transparent);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 40px;
+  }
+  
+  .bannerContent {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+  
+  .left {
+    max-width: 60%;
+  }
+  
+  .right {
+    max-width: 35%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .bannerTitle {
+    font-size: 48px;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin: 0;
+  }
+  
+  .bannerOriginalTitle {
+    font-size: 18px;
+    opacity: 0.8;
+    margin-top: 8px;
+    margin-bottom: 16px;
+  }
+  
+  .bannerDescription {
+    font-size: 16px;
+    line-height: 1.5;
+  }
+  
+  .showtimesLabel {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  .showtimesList {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  
+  .showtime {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-weight: 500;
+    background-color: #1f1a1a;
+    padding: 10px 14px;
+    border-radius: 10px;
+    cursor: pointer;
+    position: relative;
+    transition: transform 0.2s ease;
+    color: #ffd700;
+    font-size: 18px;
+    font-weight: bold;
+    position: relative;
+  }
+  
+  .trailerButtonWrapper {
+    position: absolute;
+    bottom: 20px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .trailerButton {
+    background-color: rgba(255, 255, 255, 0.95);
+    color: black;
+    font-weight: bold;
+    font-size: 16px;
+    padding: 10px 24px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  
+  .trailerButton:hover {
+    background-color: white;
+  }
+  
+  .trailerButton {
+    background-color: #111110d4;
+    color: #FFD700; /* Если по картинке текст белый, можно заменить на #fff */
+    padding: 12px 24px;
+    border: 1px solid #FFD700;
+    border-radius: 25px;
+    font-weight: 500;
+    cursor: pointer;
+    font-size: 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+  }
+  
+  .trailerButton:hover {
+    background-color: #2f2f2c;
+    /* При желании можно изменить цвет границы при hover */
+  }
+  
+  .genreTag {
+    background-color: #2b2b2b;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: 600;
+    margin: 8px 8px 0 0;
+    display: inline-block;
+  }
+  
+  .ratingWrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  
+  .stars {
+    display: flex;
+    font-size: 20px;
+    color: gold;
+  }
+  
+  .starEmpty {
+    color: #555;
+  }
+  
+  .ratingNumber {
+    font-size: 16px;
+    color: white;
+    font-weight: bold;
+  }
+  
+  .sectionTitle {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #fdfdfd;
+}
+
+.genreTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 30px;
+}
+
+.genreBubble {
+  background-color: #2e2e39;
+  padding: 10px 20px;
+  border-radius: 999px;
+  font-weight: 600;
+  color: #fff;
+}
+
+  .poster img {
+    width: 260px;
+    border-radius: 6px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
+  }
+  
+  .details {
+    flex: 1;
+    padding: 20px;
+  }
+  
+  .title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 1rem;
+  }
+  
+  .genres {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .genreTag {
+    background-color: #2c2b40;
+    padding: 0.5rem 1rem;
+    border-radius: 999px;
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+  
+  .description {
+    color: #ccc;
+    line-height: 1.6;
+    white-space: pre-line;
+  }
+  
+  .infoBox {
+    width: 220px;
+    font-size: 0.9rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .infoBox span {
+    color: #888;
+    font-size: 0.8rem;
+  }
+  

@@ -12,3 +12,13 @@ export const getAllGenres = async () => {
   const response = await axios.get(`${API_URL}/genres`);
   return response.data;
 };
+
+export const getMovieById = async (id: number) => {
+  const response = await axios.get(`${API_URL}/movies/${id}`);
+  return response.data;
+};
+
+export const getSessions = async () => {
+  const response = await axios.get(`${API_URL}/sessions`)
+  return response.data;
+}
