@@ -66,13 +66,14 @@ const MovieGrid = () => {
       </div>
       <div className="movie-grid__list">
         {filteredMovies.map((movie) => (
-          <MovieCard
-            key={movie.id}
-            title={movie.title}
-            description={movie.description}
-            posterImg={movie.posterImg}
-            genres={movie.genres || []}
-          />
+        <MovieCard
+          key={movie.id}
+          id={movie.id} 
+          title={movie.title}
+          description={movie.description}
+          posterImg={movie.posterImg}
+          genres={movie.genres || []}
+        />
         ))}
       </div>
     </section>

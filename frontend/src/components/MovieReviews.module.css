@@ -1,0 +1,96 @@
+.reviewsSection {
+    margin-top: 40px;
+    padding: 20px;
+    background-color: #1e1919;
+    border-radius: 8px;
+  }
+  
+  .sectionTitle {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  .ratingSection, .commentSection {
+    margin-bottom: 30px;
+  }
+  
+  .starRating {
+    margin: 10px 0;
+  }
+  
+  .star {
+    font-size: 24px;
+    color: #ccc;
+    cursor: pointer;
+    margin-right: 5px;
+    transition: color 0.2s;
+  }
+  
+  .star:hover, .star.filled {
+    color: gold;
+  }
+  
+  .commentInput {
+    width: 100%;
+    min-height: 100px;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    resize: vertical;
+  }
+  
+  .submitButton {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .submitButton:hover {
+    background-color: #45a049;
+  }
+  
+  .submitButton:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+  }
+  
+  .commentsList {
+    margin-top: 20px;
+  }
+  
+  .comment {
+    background-color: white;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  .commentHeader {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: #666;
+  }
+  
+  .username {
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .commentText {
+    margin: 0;
+    line-height: 1.5;
+  }
+  
+  .loading {
+    text-align: center;
+    padding: 20px;
+  }

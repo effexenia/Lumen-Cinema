@@ -1,9 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import './Header.css';
-import logo from '../assets/logo.png'
+import logo from '../assets/logo.png';
+import loginIcon from '../assets/in.png'; // Иконка для входа
+import logoutIcon from '../assets/out.png'; 
 
 export const Header = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false); 
+  // Функция для имитации входа/выхода 
+  const handleAuthClick = () => {
+    setIsLoggedIn(!isLoggedIn);
+  };
   return (
     <header className="header">
       <div className="header__container">
@@ -26,7 +33,18 @@ export const Header = () => {
           <input type="text" placeholder="Search..." />
         </div>
 
+       {/* Иконка входа */}
+       <div className="header__auth" onClick={handleAuthClick}>
+          <NavLink to={isLoggedIn ? "/profile" : "/login"} className="header__login">
+            <img 
+              src={isLoggedIn ? logoutIcon : loginIcon} 
+              alt={isLoggedIn ? "User Profile" : "Login"} 
+              className="header__auth-icon"
+            />
+          </NavLink>
+        </div>
       </div>
+      
     </header>
   );
 };
