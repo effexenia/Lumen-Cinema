@@ -64,28 +64,25 @@ exports.getAllMovies = async (req, res) => {
 
 exports.getMovieById = async (req, res) => {
   try {
-    const movieQuery = `
-      SELECT m.*, 
-        GROUP_CONCAT(g.name) AS genres,
-        AVG(r.rating) AS averageRating
-      FROM movies m
-      LEFT JOIN movie_genres mg ON m.id = mg.movie_id
-      LEFT JOIN genres g ON mg.genre_id = g.id
-      LEFT JOIN ratings r ON m.id = r.movie_id
-      WHERE m.id = ?
-      GROUP BY m.id
-    `;
+    // Запрос для фильма
+    const [movieRows] = await pool.query('SELECT * FROM movies WHERE id = ?', [req.params.id]);
+    if (!movieRows.length) return res.status(404).json({ message: 'Фільм не знайдено' });
     
-    const [rows] = await pool.query(movieQuery, [req.params.id]);
+    // Запрос для рейтинга
+    const [ratingRows] = await pool.query('SELECT AVG(rating) AS averageRating FROM ratings WHERE movie_id = ?', [req.params.id]);
     
-    if (!rows.length) return res.status(404).json({ message: 'Фільм не знайдено' });
+    // Запрос для жанров
+    const [genreRows] = await pool.query(`
+      SELECT g.id, g.name 
+      FROM genres g
+      JOIN movie_genres mg ON g.id = mg.genre_id
+      WHERE mg.movie_id = ?
+    `, [req.params.id]);
     
     const movie = {
-      ...rows[0],
-      genres: rows[0].genres 
-        ? rows[0].genres.split(',').map(name => ({ name })) 
-        : [],
-      averageRating: rows[0].averageRating ? parseFloat(rows[0].averageRating) : null
+      ...movieRows[0],
+      genres: genreRows,
+      averageRating: ratingRows[0].averageRating ? parseFloat(ratingRows[0].averageRating) : null
     };
     
     res.json(movie);

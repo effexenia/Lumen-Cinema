@@ -1,114 +1,84 @@
 import React, { useState, useEffect } from 'react';
 import styles from './MovieReviews.module.css';
+import { getCommentsByMovie, addComment } from '../api/commentService.ts';
+import { getUserRating, addOrUpdateRating, getAverageRating } from '../api/ratingService.ts';
 
-interface Review {
+interface Comment {
   id: number;
   user_id: number;
+  name: string;
   movie_id: number;
-  text: string;
-  rating: number;
+  content: string;
   created_at: string;
-  username: string;
-}
-
-interface UserRating {
-  rating: number | null;
 }
 
 const MovieReviews: React.FC<{ movieId: number }> = ({ movieId }) => {
-  const [reviews, setReviews] = useState<Review[]>([]);
-  const [userRating, setUserRating] = useState<UserRating>({ rating: null });
+  const [comments, setComments] = useState<Comment[]>([]);
+  const [userRating, setUserRating] = useState<number | null>(null);
+  const [averageRating, setAverageRating] = useState<number>(0);
   const [comment, setComment] = useState('');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Проверка аутентификации
     const token = localStorage.getItem('token');
     setIsAuthenticated(!!token);
-    
-    // Загрузка рейтингов и комментариев
+    const savedRating = localStorage.getItem(`movie_${movieId}_rating`);
+    if (savedRating) {
+      setUserRating(parseInt(savedRating));
+    }
+
     const fetchData = async () => {
       try {
-        const [reviewsRes, ratingRes] = await Promise.all([
-          fetch(`http://localhost:5000/movies/${movieId}/reviews`),
-          token && fetch(`http://localhost:5000/ratings/my/${movieId}`, {
-            headers: { 'Authorization': `Bearer ${token}` }
-          })
-        ]);
-        
-        const reviewsData = await reviewsRes.json();
-        setReviews(reviewsData);
-        
-        if (token && ratingRes) {
-          const ratingData = await ratingRes.json();
-          setUserRating(ratingData);
+        // Load comments
+        const commentsData = await getCommentsByMovie(movieId);
+        setComments(commentsData);
+
+        // Load user rating if authenticated
+        if (token) {
+          const rating = await getUserRating(movieId, token);
+          setUserRating(rating);
         }
+
+        // Load average rating
+        const avgRating = await getAverageRating(movieId);
+        setAverageRating(avgRating);
       } catch (error) {
-        console.error('Error fetching reviews:', error);
+        console.error('Error fetching data:', error);
       } finally {
         setLoading(false);
       }
     };
-    
+
     fetchData();
   }, [movieId]);
 
-  const handleRatingChange = (newRating: number) => {
-    if (!isAuthenticated) {
-      alert('Будь ласка, увійдіть для оцінювання');
-      return;
-    }
-    setUserRating({ rating: newRating });
+  const handleRatingChange = (value: number) => {
+    if (!isAuthenticated) return alert('Увійдіть, щоб оцінити');
+    setUserRating(value);
   };
 
   const handleSubmitRating = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:5000/ratings', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          movie_id: movieId,
-          rating: userRating.rating
-        })
-      });
-      
-      if (!response.ok) throw new Error('Failed to submit rating');
-      
-      alert('Рейтинг успішно оновлено!');
+      const token = localStorage.getItem('token')!;
+      await addOrUpdateRating(movieId, userRating!, token);
+      alert('Оцінка успішно оновлена!');
     } catch (error) {
-      console.error('Error submitting rating:', error);
-      alert('Помилка при оновленні рейтингу');
+      console.error('Error updating rating:', error);
+      alert('Помилка при оновленні оцінки');
     }
   };
 
   const handleSubmitComment = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:5000/reviews', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          movie_id: movieId,
-          text: comment
-        })
-      });
-      
-      if (!response.ok) throw new Error('Failed to submit comment');
-      
-      const newReview = await response.json();
-      setReviews([...reviews, newReview]);
+      const token = localStorage.getItem('token')!;
+      await addComment(movieId, comment, token);
+      const updatedComments = await getCommentsByMovie(movieId);
+      setComments(updatedComments);
       setComment('');
       alert('Коментар успішно додано!');
     } catch (error) {
-      console.error('Error submitting comment:', error);
+      console.error('Error adding comment:', error);
       alert('Помилка при додаванні коментаря');
     }
   };
@@ -118,27 +88,25 @@ const MovieReviews: React.FC<{ movieId: number }> = ({ movieId }) => {
   return (
     <div className={styles.reviewsSection}>
       <h2 className={styles.sectionTitle}>Відгуки та рейтинги</h2>
-      
       <div className={styles.ratingSection}>
-        <h3>Ваша оцінка</h3>
+        <h4>Ваша оцінка</h4>
         {isAuthenticated ? (
           <>
             <div className={styles.starRating}>
-              {[1, 2, 3, 4, 5].map((star) => (
-                <span
-                  key={star}
-                  className={`${styles.star} ${userRating.rating && star <= userRating.rating ? styles.filled : ''}`}
-                  onClick={() => handleRatingChange(star)}
-                >
-                  ★
-                </span>
-              ))}
+            {[1, 2, 3, 4, 5].map((star) => (
+              <span
+                key={star}
+                className={`${styles.star} ${
+                  userRating !== null && star <= userRating ? styles.filled : ''
+                }`}
+                onClick={() => handleRatingChange(star)}>
+                ★
+              </span>
+            ))}
+
             </div>
-            {userRating.rating && (
-              <button 
-                className={styles.submitButton}
-                onClick={handleSubmitRating}
-              >
+            {userRating && (
+              <button className={styles.submitButton} onClick={handleSubmitRating}>
                 Підтвердити оцінку
               </button>
             )}
@@ -147,7 +115,7 @@ const MovieReviews: React.FC<{ movieId: number }> = ({ movieId }) => {
           <p>Увійдіть, щоб залишити оцінку</p>
         )}
       </div>
-      
+
       <div className={styles.commentSection}>
         <h3>Коментарі</h3>
         {isAuthenticated ? (
@@ -169,27 +137,22 @@ const MovieReviews: React.FC<{ movieId: number }> = ({ movieId }) => {
         ) : (
           <p>Увійдіть, щоб залишити коментар</p>
         )}
-        
+
         <div className={styles.commentsList}>
-          {reviews.length > 0 ? (
-            reviews.map((review) => (
+          {comments.length > 0 ? (
+            comments.map((review) => (
               <div key={review.id} className={styles.comment}>
                 <div className={styles.commentHeader}>
-                  <span className={styles.username}>{review.username}</span>
+                <span className={styles.username}>{review.name}</span>
                   <span className={styles.date}>
                     {new Date(review.created_at).toLocaleDateString()}
                   </span>
-                  {review.rating && (
-                    <span className={styles.commentRating}>
-                      Оцінка: {review.rating}/5
-                    </span>
-                  )}
                 </div>
-                <p className={styles.commentText}>{review.text}</p>
+                <p>{review.content}</p>
               </div>
             ))
           ) : (
-            <p>Ще немає відгуків</p>
+            <p>Коментарів ще немає</p>
           )}
         </div>
       </div>
