@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import styles from './LoginPopup.module.css';
-import authService from '../../api/api.ts';
+import authService from '../../api/authService.ts';
 import { useNavigate } from 'react-router-dom';
+import { FiEye, FiEyeOff } from 'react-icons/fi';
 
 const LoginPopup = () => {
     const [email, setEmail] = useState('');
@@ -9,20 +10,31 @@ const LoginPopup = () => {
     const navigate = useNavigate();
     const [showPassword, setShowPassword] = useState(false);
 
-const togglePassword = () => {
-  setShowPassword(prev => !prev);
-};
+    const togglePassword = () => setShowPassword(prev => !prev);
   
     const handleSubmit = async (e: React.FormEvent) => {
       e.preventDefault();
       try {
-        await authService.login({ email, password });
-        navigate('/profile'); 
+        const response = await authService.login({ email, password });
+        
+        // Сохраняем данные единообразно:
+        localStorage.setItem('token', response.token);
+        localStorage.setItem('userId', response.user.id.toString()); 
+        localStorage.setItem('userRole', response.user.role);
+        
+        // Для остальных данных можно сохранить объект (опционально)
+        localStorage.setItem('user', JSON.stringify(response.user));
+        
+        if (response.user.role === 'admin') {
+          navigate('/admin/dashboard');
+        } else {
+          navigate('/profile');
+        }
       } catch (error: any) {
         alert(error.response?.data?.message || 'Login failed');
       }
     };
-  
+
   return (
     <div className={styles.overlay}>
       <div className={styles.popup}>
@@ -58,7 +70,14 @@ const togglePassword = () => {
                 className={styles.input}
                 required
               />
-              <span className={styles.eyeIcon}>👁️</span>
+                            <span
+                className={styles.eyeIcon}
+                onClick={togglePassword}
+                style={{ cursor: 'pointer' }}
+                title={showPassword ? 'Hide password' : 'Show password'}
+              >
+                {showPassword ? <FiEyeOff /> : <FiEye />}
+              </span>
             </div>
           </div>
 

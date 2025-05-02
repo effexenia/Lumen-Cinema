@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styles from './LoginPopup.module.css';
-import authService from '../../api/api.ts';
+import authService from '../../api/authService.ts';
 import { useNavigate } from 'react-router-dom';
 import { FiEye, FiEyeOff } from 'react-icons/fi';
 
