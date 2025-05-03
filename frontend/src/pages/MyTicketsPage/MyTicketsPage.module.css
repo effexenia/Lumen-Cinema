@@ -1,0 +1,82 @@
+.page {
+    background-color: #0d0c1d;
+    color: white;
+    padding: 30px;
+    min-height: 100vh;
+    font-family: sans-serif;
+  }
+  
+  .title {
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 30px;
+  }
+  
+  .tickets {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .ticketCard {
+    background-color: #1a1a2e;
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .ticketHeader {
+    border-bottom: 1px solid #333;
+    padding-bottom: 12px;
+  }
+  
+  .movie {
+    font-size: 20px;
+    font-weight: bold;
+    margin: 0 0 4px 0;
+  }
+  
+  .time,
+  .cinema,
+  .location {
+    font-size: 14px;
+    color: #ccc;
+  }
+  
+  .ticketInfo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 15px;
+  }
+  
+  .seats {
+    color: #eee;
+  }
+  
+  .price {
+    font-weight: bold;
+    font-size: 18px;
+    color: #fcd54c;
+  }
+  
+  .button {
+    align-self: flex-end;
+    padding: 10px 20px;
+    background-color: #fcd54c;
+    color: #000;
+    border: none;
+    border-radius: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.2s ease;
+  }
+  
+  .button:hover {
+    background-color: #eac640;
+  }
+  

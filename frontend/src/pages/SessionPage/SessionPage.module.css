@@ -1,0 +1,142 @@
+.page {
+  background-color: #0d0c1d;
+  color: white;
+  padding: 20px;
+  font-family: sans-serif;
+}
+
+.title {
+  font-size: 32px;
+  font-weight: bold;
+}
+
+.subtitle {
+  color: #ccc;
+  margin-bottom: 20px;
+}
+
+.layout {
+  display: flex;
+  justify-content: space-between;
+}
+
+.hall {
+  flex: 1;
+  margin-right: 40px;
+}
+
+.screen {
+  background: linear-gradient(to bottom, #999, #333);
+  color: #fff;
+  text-align: center;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.seatMap {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.row {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+}
+
+.seat {
+  width: 28px;
+  height: 28px;
+  background-color: #ccc;
+  color: #000;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+}
+
+.seat:hover {
+  cursor: pointer;
+}
+
+.selected {
+  background-color: #fcd54c !important;
+}
+
+.vip {
+  background-color: #5a6bd6;
+}
+
+.unavailable {
+  background-color: #555;
+}
+
+.legend {
+  margin-top: 20px;
+  font-size: 14px;
+  color: #aaa;
+}
+
+.square {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  background-color: #ccc;
+  margin-right: 6px;
+}
+
+.sidebar {
+  width: 300px;
+  background-color: #1a1a2e;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.infoRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  color: #ccc;
+}
+
+.tickets {
+  background-color: #292945;
+  padding: 20px;
+  border-radius: 8px;
+  margin-top: 20px;
+}
+
+.ticketRow {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  color: white;
+}
+
+.total {
+  display: flex;
+  justify-content: space-between;
+  font-size: 18px;
+  font-weight: bold;
+  color: white;
+  margin-top: 20px;
+}
+
+.button {
+  margin-top: 20px;
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  background-color: #fcd54c;
+  color: #000;
+  border: none;
+  border-radius: 32px;
+  cursor: pointer;
+  font-weight: bold;
+}
