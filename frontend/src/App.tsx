@@ -6,8 +6,10 @@ import React from "react";
 import MoviePage from './pages/MoviePage/MoviePage.tsx'; 
 import LoginPopup from "./pages/LoginPage/LoginPopup.tsx";
 import RegisterPopup from "./pages/LoginPage/RegisterPopup.tsx";
-import ProtectedRoute from './components/ProtectedRoute';
+//import ProtectedRoute from './components/ProtectedRoute';
 import ProfilePage from "./pages/ProfilePage/ProfilePage.tsx";
+import MyTicketsPage from "./pages/MyTicketsPage/MyTicketsPage.tsx";
+import SessionPage from "./pages/SessionPage/SessionPage.tsx";
 
 function App() {
   return (
@@ -23,7 +25,8 @@ function App() {
         <Route path="/movie/:id" element={<MoviePage />}/>
         <Route path="/login" element={<LoginPopup/>}/>
         <Route path="/register" element={<RegisterPopup/>}/>
-
+        <Route path="/tickets" element={<MyTicketsPage />} />
+        <Route path="/session/:id" element={<SessionPage />} />
         {/* Защищенные маршруты для пользователей */}
       {/* <Route element={<ProtectedRoute roles={['user', 'admin']} />}>
         <Route path="/profile" element={<ProfilePage />} />

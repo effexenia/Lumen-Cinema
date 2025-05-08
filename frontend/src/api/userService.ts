@@ -20,16 +20,17 @@ export const getProfile = async (id: number) => {
   return response.data;
 }
 
-export const updateProfile = async (id: number, data: ProfileData) => {
+export const updateProfile = async (id: number, data: FormData) => {
   const token = getAuthToken();
   const response = await axios.put(`${API_URL}/profile/${id}`, data, {
     headers: {
       'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json'
+      'Content-Type': 'multipart/form-data'
     }
   });
   return response.data;
-}
+};
+
 
 export const deleteUser = async (userId: number) => {
   const token = getAuthToken();

@@ -67,7 +67,7 @@ const ProfilePage: React.FC = () => {
     if (!avatarUrl) return 'http://localhost:5000/uploads/default-avatar.png';
     
     const isFullUrl = avatarUrl.startsWith('http://') || avatarUrl.startsWith('https://');
-    return isFullUrl ? avatarUrl : `http://localhost:5000/${avatarUrl}`;
+    return isFullUrl ? avatarUrl : `http://localhost:5000${avatarUrl}`;
   };
   
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -75,48 +75,43 @@ const ProfilePage: React.FC = () => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSave = async () => {
-  
-    const data = new FormData();
-    data.append('name', formData.name);
-    data.append('email', formData.email);
-    data.append('dob', formData.dob);
-    data.append('phone', formData.phone);
-    
-    // Only append avatar_url if no file is selected
-    if (!selectedFile && formData.avatar_url) {
-      data.append('avatar_url', formData.avatar_url);
+
+const handleSave = async () => {
+  const data = new FormData();
+  data.append('name', formData.name);
+  data.append('email', formData.email);
+  data.append('dob', formData.dob);
+  data.append('phone', formData.phone);
+
+  if (!selectedFile && formData.avatar_url) {
+    data.append('avatar_url', formData.avatar_url);
+  }
+
+  if (selectedFile) {
+    data.append('avatar', selectedFile);
+  }
+
+  try {
+    const response = await updateProfile(userId, data); // використовуємо API з userService.ts
+
+    setUser(response.user);
+    setFormData(prev => ({
+      ...prev,
+      avatar_url: response.user.avatar_url || ''
+    }));
+    setIsEditing(false);
+    setSelectedFile(null);
+    alert('Профіль оновлено!');
+  } catch (error) {
+    console.error('Update error:', error);
+    if (axios.isAxiosError(error) && error.response?.status === 401) {
+      navigate('/login');
+    } else {
+      alert('Помилка при оновленні профілю');
     }
-    
-    if (selectedFile) {
-      data.append('avatar', selectedFile);
-    }
-  
-    try {
-      const response = await axios.put(
-        `http://localhost:5000/api/users/profile/${userId}`,
-        data,
-        {
-          headers: { 
-            'Content-Type': 'multipart/form-data',
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-          }
-        }
-      );
-  
-      setUser(response.data.user);
-      setIsEditing(false);
-      setSelectedFile(null);
-      alert('Профіль оновлено!');
-    } catch (error) {
-      console.error('Update error:', error);
-      if (axios.isAxiosError(error) && error.response?.status === 401) {
-        navigate('/login');
-      } else {
-        alert('Помилка при оновленні профілю');
-      }
-    }
-  };
+  }
+};
+
   
 
   const handleLogout = () => {

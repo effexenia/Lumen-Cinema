@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 const cookieParser = require('cookie-parser');
 const userRoutes = require('./routes/user.routes');
 const movieRoutes = require('./routes/movie.routes');
@@ -34,7 +35,7 @@ app.use('/api/payments', paymentRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api', commentRoutes);
 app.use('/api', ratingRoutes);
-app.use('/uploads', express.static('uploads'));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 
 // Тест корінного ендпоінта
