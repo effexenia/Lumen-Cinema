@@ -169,13 +169,13 @@ const MoviePage: React.FC = () => {
 
         <div className={styles.details}>
         <h3 className={styles.sectionTitle}>Яке це кіно</h3>
-<div className={styles.genreTags}>
-  {movie.genres?.map((genre) => (
-    <span key={genre.id} className={styles.genreBubble}>
-      {genre.name}
-    </span>
-  ))}
-</div>
+      <div className={styles.genreTags}>
+        {movie.genres?.map((genre) => (
+          <span key={genre.id} className={styles.genreBubble}>
+            {genre.name}
+          </span>
+        ))}
+      </div>
           <h2 className={styles.title}>{movie.title}</h2>
 
           <p className={styles.description}>{movie.summary}</p>
