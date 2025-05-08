@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styles from "./SessionPage.module.css";
 import { FaMapMarkerAlt, FaInfoCircle } from "react-icons/fa";
 import { useParams } from "react-router-dom";
@@ -17,7 +18,6 @@ interface Session {
   hall_id: number;
   start_time: string;
   price: number;
-  // add more fields if needed
 }
 
 interface Hall {
@@ -30,6 +30,7 @@ interface Hall {
 type Movie = {
   id: number;
   title: string;
+  posterImg: string;
 };
 
 const generateSeatMap = (rows: number, cols: number): number[][] => {
@@ -52,6 +53,30 @@ export default function SessionPage() {
   const [seatMap, setSeatMap] = useState<number[][]>([]);
   const [selectedSeats, setSelectedSeats] = useState<Seat[]>([]);
   const [movie, setMovie] = useState<Movie | null>(null);
+  const navigate = useNavigate();
+const handleContinueClick = () => {
+    if (!session || !session.price) {
+    console.error("Session data is not loaded");
+    return;
+  }
+  if (selectedSeats.length === 0) {
+    alert("Будь ласка, оберіть хоча б одне місце");
+    return;
+  }
+
+  navigate("/payment", {
+    state: {
+      movieId: session?.movie_id,
+      sessionId: session?.id,
+      selectedSeats,
+      totalPrice: selectedSeats.length * session?.price,
+      movieTitle: movie?.title,
+      sessionTime: session?.start_time,
+      hallName: hall?.name,
+      posterImg: movie?.posterImg
+    }
+  });
+};
   
   const toggleSeatSelection = (row: number, seat: number) => {
   const seatIndex = selectedSeats.findIndex(s => s.row === row && s.seat === seat);
@@ -162,7 +187,7 @@ const fetchData = async () => {
               Всього: {selectedSeats.length} квитки
               <span>{selectedSeats.length * session.price} грн</span>
             </div>
-            <button className={styles.button}>Продовжити</button>
+           <button className={styles.button} onClick={handleContinueClick}>Продовжити</button>
           </div>
         </div>
       </div>

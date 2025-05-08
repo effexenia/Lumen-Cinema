@@ -10,6 +10,7 @@ import RegisterPopup from "./pages/LoginPage/RegisterPopup.tsx";
 import ProfilePage from "./pages/ProfilePage/ProfilePage.tsx";
 import MyTicketsPage from "./pages/MyTicketsPage/MyTicketsPage.tsx";
 import SessionPage from "./pages/SessionPage/SessionPage.tsx";
+import PaymentPage from "./pages/PaymentPage/PaymentPage.tsx";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
         <Route path="/register" element={<RegisterPopup/>}/>
         <Route path="/tickets" element={<MyTicketsPage />} />
         <Route path="/session/:id" element={<SessionPage />} />
+        <Route path="/payment" element={<PaymentPage />} />
         {/* Защищенные маршруты для пользователей */}
       {/* <Route element={<ProtectedRoute roles={['user', 'admin']} />}>
         <Route path="/profile" element={<ProfilePage />} />
