@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const API_URL = 'http://localhost:5000/api';
 
-export const getMyTickets = async (userId: number) => {
+export const getMyTickets = async () => {
   const response = await axios.get(`${API_URL}/tickets/my`, {
     headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
   });

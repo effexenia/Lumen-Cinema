@@ -1,57 +1,70 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./MyTicketsPage.module.css";
+import { getMyTickets } from "../../api/ticketService.ts";
 
-const tickets = [
-  {
-    movie: "ЧАРІВНИЙ ГОДИННИК",
-    date: "2 травня",
-    time: "17:15 - 18:41",
-    cinema: "Cinetech+, 2D",
-    location: "Харків, Французький Бульвар",
-    seats: [
-      { row: 7, seat: 6 },
-      { row: 7, seat: 7 },
-    ],
-    price: 260,
-  },
-  {
-    movie: "БАРБІ",
-    date: "5 травня",
-    time: "19:00 - 21:00",
-    cinema: "Cinetech+, 3D",
-    location: "Київ, ТРЦ Гулівер",
-    seats: [{ row: 4, seat: 10 }],
-    price: 230,
-  },
-];
+interface Ticket {
+  ticket_id: number;
+  seat_row: number;
+  seat_col: number;
+  start_time: string;
+  movie: string;
+  hall: string;
+  price: number;
+}
 
 export default function MyTicketsPage() {
+  const [tickets, setTickets] = useState<Ticket[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchTickets = async () => {
+      try {
+        const data = await getMyTickets();
+        setTickets(data);
+      } catch (error) {
+        console.error("Помилка при отриманні квитків:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTickets();
+  }, []);
+
+  if (loading) {
+    return <div className={styles.page}>Завантаження квитків...</div>;
+  }
+
   return (
     <div className={styles.page}>
       <h1 className={styles.title}>Мої квитки</h1>
       <div className={styles.tickets}>
-        {tickets.map((ticket, index) => (
-          <div key={index} className={styles.ticketCard}>
-            <div className={styles.ticketHeader}>
-              <h2 className={styles.movie}>{ticket.movie}</h2>
-              <div className={styles.time}>
-                {ticket.date}, {ticket.time}
+        {tickets.length === 0 ? (
+          <div className={styles.noTickets}>У вас ще немає квитків.</div>
+        ) : (
+          tickets.map((ticket) => (
+            <div key={ticket.ticket_id} className={styles.ticketCard}>
+              <div className={styles.ticketHeader}>
+                <h2 className={styles.movie}>{ticket.movie}</h2>
+                <div className={styles.time}>
+                  {new Date(ticket.start_time).toLocaleString("uk-UA", {
+                    dateStyle: "medium",
+                    timeStyle: "short",
+                  })}
+                </div>
+                <div className={styles.cinema}>{ticket.hall}</div>
+                <div className={styles.location}>Локація: уточнюється</div>
               </div>
-              <div className={styles.cinema}>{ticket.cinema}</div>
-              <div className={styles.location}>{ticket.location}</div>
-            </div>
-            <div className={styles.ticketInfo}>
-              <div className={styles.seats}>
-                Місця:{" "}
-                {ticket.seats
-                  .map((s) => `${s.row} ряд, ${s.seat} місце`)
-                  .join("; ")}
+              <div className={styles.ticketInfo}>
+                <div className={styles.seats}>
+                  Місце: {ticket.seat_row} ряд, {ticket.seat_col} місце
+                </div>
+                <div className={styles.price}>Ціна: {ticket.price} грн</div>
               </div>
-              <div className={styles.price}>{ticket.price} грн</div>
+              <button className={styles.button}>Показати QR-код</button>
             </div>
-            <button className={styles.button}>Показати QR-код</button>
-          </div>
-        ))}
+          ))
+        )}
       </div>
     </div>
   );
