@@ -18,7 +18,12 @@ export const createSession = async (sessionData: {
   start_time: string;
   price: number;
 }) => {
-  const response = await axios.post(`${API_URL}/sessions`, sessionData);
+  const token = localStorage.getItem('token');
+  const response = await axios.post(`${API_URL}/sessions`, sessionData, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
   return response.data;
 };
 
@@ -31,9 +36,15 @@ export const updateSession = async (
     price: number;
   }
 ) => {
-  const response = await axios.put(`${API_URL}/sessions/${id}`, sessionData);
+  const token = localStorage.getItem('token');
+  const response = await axios.put(`${API_URL}/sessions/${id}`, sessionData, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
   return response.data;
 };
+
 
 export const deleteSession = async (id: number) => {
   const response = await axios.delete(`${API_URL}/sessions/${id}`);

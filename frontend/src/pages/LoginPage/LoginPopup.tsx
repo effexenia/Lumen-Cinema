@@ -90,7 +90,7 @@ const LoginPopup = () => {
           </div>
 
           <button type="submit" className={styles.loginButton}>
-            Login to Bolt →
+            Login to Lumen →
           </button>
         </form>
 

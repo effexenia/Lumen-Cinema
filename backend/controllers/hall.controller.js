@@ -12,20 +12,28 @@ exports.getHalls = async (req, res) => {
 
 exports.createHall = async (req, res) => {
   try {
-    const { name, seats } = req.body;
-    await db.query('INSERT INTO halls (name, seats) VALUES (?, ?)', [name, seats]);
+    const { name, seat_rows, seat_cols } = req.body;
+    await db.query(
+      'INSERT INTO halls (name, seat_rows, seat_cols) VALUES (?, ?, ?)', 
+      [name, seat_rows, seat_cols]
+    );
     res.status(201).json({ message: 'Зал створено' });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ message: 'Помилка при створенні залу' });
   }
 };
 
 exports.updateHall = async (req, res) => {
   try {
-    const { name, seats } = req.body;
-    await db.query('UPDATE halls SET name = ?, seats = ? WHERE id = ?', [name, seats, req.params.id]);
+    const { name, seat_rows, seat_cols } = req.body;
+    await db.query(
+      'UPDATE halls SET name = ?, seat_rows = ?, seat_cols = ? WHERE id = ?', 
+      [name, seat_rows, seat_cols, req.params.id]
+    );
     res.json({ message: 'Зал оновлено' });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ message: 'Помилка при оновленні залу' });
   }
 };

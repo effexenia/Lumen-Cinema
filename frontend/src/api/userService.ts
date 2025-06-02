@@ -20,6 +20,16 @@ export const getProfile = async (id: number) => {
   return response.data;
 }
 
+export const checkAdmin = async (id: number) => {
+  const token = getAuthToken();
+  const response = await axios.get(`${API_URL}/admin/${id}`, {
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  });
+  return response.data;
+}
+
 export const updateProfile = async (id: number, data: FormData) => {
   const token = getAuthToken();
   const response = await axios.put(`${API_URL}/profile/${id}`, data, {

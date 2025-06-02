@@ -2,9 +2,8 @@ import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import './Header.css';
 import logo from '../assets/logo.png';
-import loginIcon from '../assets/in.png'; // Иконка для входа
-import logoutIcon from '../assets/out.png'; 
-
+import loginIcon from '../assets/in.png';
+import logoutIcon from '../assets/out.png';
 
 export const Header = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('token'));
@@ -16,45 +15,47 @@ export const Header = () => {
     setIsLoggedIn(false);
     window.location.href = '/';
   };
+
   return (
     <header className="header">
       <div className="header__container">
+        {/* Logo */}
+        <NavLink to="/" className="header__logo">
+          <img src={logo} alt="Lumien Cinema" />
+        </NavLink>
 
-        {/* Логотип */}
-        <NavLink  to="/" className="header__logo">
-        <img src={logo} alt="Lumien Cinema" />
-        </NavLink >
-
-        {/* Навігація */}
+        {/* Navigation */}
         <nav className="header__nav">
-          <NavLink  to="/" className={({ isActive }) => isActive ? "header__link active" : "header__link"}>Home</NavLink >
-          <NavLink  to="/about" className={({ isActive }) => isActive ? "header__link active" : "header__link"}>About Us</NavLink >
-          <NavLink  to="/tickets" className={({ isActive }) => isActive ? "header__link active" : "header__link"}>My Tickets</NavLink >
-          <NavLink  to="/profile" className={({ isActive }) => isActive ? "header__link active" : "header__link"}>Profile</NavLink >
+          <NavLink to="/" className={({ isActive }) => isActive ? "header__link active" : "header__link"}>Home</NavLink>
+          <NavLink to="/about" className={({ isActive }) => isActive ? "header__link active" : "header__link"}>About Us</NavLink>
+          <NavLink to="/tickets" className={({ isActive }) => isActive ? "header__link active" : "header__link"}>My Tickets</NavLink>
+          <NavLink to="/profile" className={({ isActive }) => isActive ? "header__link active" : "header__link"}>Profile</NavLink>
         </nav>
 
-        {/* Пошук */}
+        {/* Search */}
         <div className="header__search">
           <input type="text" placeholder="Search..." />
         </div>
 
-       {/* Иконка входа */}
-       <div className="header__auth">
-        {isLoggedIn ? (
-          <div className="header__user-menu">
-            <NavLink to={user?.role === 'admin' ? '/admin/dashboard' : '/profile'}>
-              <img src={user?.avatar || loginIcon} alt="User" className="header__auth-icon" />
+        {/* Auth Section - Fixed */}
+        <div className="header__auth">
+          {isLoggedIn ? (
+            <>
+              <NavLink 
+                to={user?.role === 'admin' ? '/admin/dashboard' : '/profile'} 
+                className="header__user-profile"
+              >
+              </NavLink>
+              <button onClick={handleLogout} className="header__logout-btn">
+                <img src={logoutIcon} alt="Logout" className="header__logout-icon" />
+              </button>
+            </>
+          ) : (
+            <NavLink to="/login" className="header__login-link">
+              <img src={loginIcon} alt="Login" className="header__login-icon" />
             </NavLink>
-            <button onClick={handleLogout} className="header__logout">
-              <img src={logoutIcon} alt="Logout" />
-            </button>
-          </div>
-        ) : (
-          <NavLink to="/login" className="header__login">
-            <img src={loginIcon} alt="Login" className="header__auth-icon" />
-          </NavLink>
-        )}
-      </div>
+          )}
+        </div>
       </div>
     </header>
   );
