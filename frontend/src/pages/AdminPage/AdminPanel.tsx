@@ -6,6 +6,7 @@ import { Sessions } from './Sessions.tsx';
 import { Halls } from './Halls.tsx';
 import { Tickets } from './Tickets.tsx';
 import { Payments } from './Payments.tsx';
+import { Movies } from './Movies.tsx';
 
 export const AdminPanel = () => {
   const [selectedTab, setSelectedTab] = useState('dashboard');
@@ -14,6 +15,7 @@ export const AdminPanel = () => {
     switch (selectedTab) {
       case 'dashboard': return <Dashboard />;
       case 'users': return <Users />;
+      case 'movies': return <Movies />;
       case 'sessions': return <Sessions />;
       case 'halls': return <Halls />;
       case 'tickets': return <Tickets />;

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styles from './EditModal.module.css';
 
-type FieldType = 'text' | 'email' | 'number' | 'date' | 'datetime-local' | 'select';
+type FieldType = 'text' | 'email' | 'number' | 'password' | 'date' | 'datetime-local' | 'select';
 
 interface FieldOption {
   value: string | number;
@@ -44,17 +44,19 @@ const EditModal = ({ title, initialData, fields, onClose, onSave }: EditModalPro
           {fields.map(field => (
             <label key={field.name}>
               {field.label}:
-              {field.type === 'select' ? (
+                {field.type === 'select' ? (
                 <select
-                  name={field.name}
-                  value={formData[field.name] ?? ''}
-                  onChange={handleChange}
+                    name={field.name}
+                    value={formData[field.name] ?? ''}
+                    onChange={handleChange}
+                    required
                 >
-                  {field.options?.map(option => (
+                    <option value="">Select {field.label.toLowerCase()}...</option>
+                    {field.options?.map(option => (
                     <option key={option.value} value={option.value}>
-                      {option.label}
+                        {option.label}
                     </option>
-                  ))}
+                    ))}
                 </select>
               ) : (
                 <input

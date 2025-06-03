@@ -7,4 +7,5 @@ export interface User {
   dob?: string | null;  
   created_at?: string;
   role?: string;  
+  password?: string;
 }

@@ -5,6 +5,7 @@ import { getMovieById } from "../../api/api.ts";
 import { getSessions } from "../../api/api.ts";
 import SessionList from "../../components/SessionList.tsx";
 import MovieReviews from '../../components/MovieReviews.tsx';
+import TrailerButton from '../../components/TrailerButton.tsx';
 
 
 interface Genre {
@@ -33,7 +34,7 @@ type Movie = {
   country: string;
   studio: string;
   showtimes: string[];
-  trailerUrl?: string; // <-- нове
+  trailer_url?: string; 
   averageRating: number | null;
 };
 
@@ -48,6 +49,7 @@ const MoviePage: React.FC = () => {
   const [movie, setMovie] = useState<Movie | null>(null);
   const [loading, setLoading] = useState(true);
   const [sessions, setSessions] = useState<Session[]>([]);
+  const [showTrailer, setShowTrailer] = useState(false);
 
   const getFullImageUrl = (imageUrl: string): string => {
     if (!imageUrl) return "";
@@ -55,6 +57,29 @@ const MoviePage: React.FC = () => {
     return isFullUrl ? imageUrl : `http://localhost:5000/${imageUrl}`;
   };
 
+// const extractVideoId = (url: string): string | null => {
+//   if (!url) return null;
+  
+//   // Обрабатываем разные форматы YouTube URL
+//   const patterns = [
+//     /youtu\.be\/([^#&?]+)/,                        // youtu.be/ID
+//     /youtube\.com\/embed\/([^#&?]+)/,              // youtube.com/embed/ID
+//     /youtube\.com\/watch\?v=([^#&?]+)/,            // youtube.com/watch?v=ID
+//     /youtube\.com\/v\/([^#&?]+)/,                  // youtube.com/v/ID
+//     /youtube\.com\/user\/.*#\w\/\w\/\w\/\w\/(\w+)/ // сложные URL
+//   ];
+
+//   for (const pattern of patterns) {
+//     const match = url.match(pattern);
+//     if (match && match[1]) {
+//       return match[1].length === 11 ? match[1] : null;
+//     }
+//   }
+
+//   // Если ни один шаблон не подошел, попробуем извлечь 11-символьный ID напрямую
+//   const directMatch = url.match(/[^#&?]{11}/);
+//   return directMatch ? directMatch[0] : null;
+// };
   function formatDate(dateStr: string): string {
     const date = new Date(dateStr);
     if (isNaN(date.getTime())) {
@@ -91,6 +116,35 @@ const MoviePage: React.FC = () => {
 
   return (
     <div className={styles.page}>
+           {/* Модальное окно для трейлера
+    {showTrailer && movie?.trailer_url && (
+      <div className={styles.trailerModal} onClick={() => setShowTrailer(false)}>
+        <div className={styles.trailerModalContent} onClick={(e) => e.stopPropagation()}>
+          <button 
+            className={styles.closeTrailerButton} 
+            onClick={() => setShowTrailer(false)}
+          >
+            &times;
+          </button>
+          
+          {extractVideoId(movie.trailer_url) ? (
+            <iframe
+              width="100%"
+              height="100%"
+              src={`https://www.youtube.com/embed/${extractVideoId(movie.trailer_url)}?autoplay=1`}
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            ></iframe>
+          ) : (
+            <video controls autoPlay style={{ width: '100%', height: '100%' }}>
+              <source src={movie.trailer_url} type="video/mp4" />
+              Ваш браузер не поддерживает видео.
+            </video>
+          )}
+        </div>
+      </div>
+    )} */}
       <div
   className={styles.banner}
   style={{ backgroundImage: `url(${getFullImageUrl(movie.bannerImg)})` }}
@@ -123,19 +177,12 @@ const MoviePage: React.FC = () => {
     </div>
   </div>
 
-  <div className={styles.trailerButtonWrapper}>
-  <button
-    className={styles.trailerButton}
-    onClick={() => {
-      if (movie?.trailerUrl) {
-        window.open(movie.trailerUrl, "_blank");
-      } else {
-        alert("Трейлер недоступний");
-      }
-    }}
-  >
-    &#x23F5; Watch Trailer
-  </button>
+<div className={styles.trailerButtonWrapper}>
+  <TrailerButton 
+    trailerUrl={movie.trailer_url} 
+    buttonClassName={styles.trailerButton}
+    modalClassName={styles.trailerModal}
+  />
 </div>
 </div>
 

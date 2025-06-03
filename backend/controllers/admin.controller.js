@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 const db = require('../config/db');
+const bcrypt = require('bcrypt');
 
 // exports.getStatistics = async (req, res) => {
 //   try {
@@ -102,5 +103,47 @@ exports.deleteUser = async (req, res) => {
     res.json({ message: 'Користувача видалено' });
   } catch (err) {
     res.status(500).json({ message: 'Помилка при видаленні користувача' });
+  }
+};
+
+exports.createUser = async (req, res) => {
+  try {
+    const { name, email, phone, dob, role, password } = req.body;
+
+    if (!name || !email || !password) {
+      return res.status(400).json({ message: 'Імʼя, email і пароль обовʼязкові' });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const [result] = await db.query(
+      'INSERT INTO users (name, email, phone, dob, role, password, created_at) VALUES (?, ?, ?, ?, ?, ?, NOW())',
+      [name, email, phone, dob, role, hashedPassword]
+    );
+
+    const [userRows] = await db.query('SELECT id, name, email, phone, dob, role, created_at FROM users WHERE id = ?', [result.insertId]);
+    res.status(201).json(userRows[0]); // не повертаємо пароль
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Помилка при створенні користувача' });
+  }
+};
+
+// Оновлення користувача
+exports.updateUser = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const { name, email, phone, dob, role } = req.body;
+
+    await db.query(
+      'UPDATE users SET name = ?, email = ?, phone = ?, dob = ?, role = ? WHERE id = ?',
+      [name, email, phone, dob, role, userId]
+    );
+
+    const [userRows] = await db.query('SELECT * FROM users WHERE id = ?', [userId]);
+    res.json(userRows[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Помилка при оновленні користувача' });
   }
 };

@@ -1,9 +1,9 @@
-interface Genre {
+export interface Genre {
   id: number;
   name: string;
 }
 
-type Movie = {
+export type Movie = {
   id: number;
   title: string;
   posterImg: string;

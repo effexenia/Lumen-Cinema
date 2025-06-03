@@ -14,6 +14,7 @@ exports.getAllMovies = async (req, res) => {
         m.posterImg, 
         m.release_date, 
         m.bannerImg,
+        m.trailer_url,
         GROUP_CONCAT(DISTINCT g.name) AS genres,
         IFNULL(AVG(r.rating), 0) AS averageRating
       FROM movies m
@@ -94,26 +95,60 @@ exports.getMovieById = async (req, res) => {
 
 exports.createMovie = async (req, res) => {
   try {
-    const { title, description, release_date, genre_id, duration } = req.body;
+    const {
+      title,
+      description,
+      duration_minutes,
+      release_date,
+      posterImg,
+      trailer_url,
+      bannerImg,
+      language,
+      country,
+      studio,
+      summary
+    } = req.body;
+
     await pool.query(
-      'INSERT INTO movies (title, description, release_date, genre_id, duration) VALUES (?, ?, ?, ?, ?)',
-      [title, description, release_date, genre_id, duration]
+      `INSERT INTO movies 
+        (title, description, duration_minutes, release_date, posterImg, trailer_url, bannerImg, language, country, studio, summary) 
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [title, description, duration_minutes, release_date, posterImg, trailer_url, bannerImg, language, country, studio, summary]
     );
+
     res.status(201).json({ message: 'Фільм додано' });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ message: 'Помилка при додаванні фільму' });
   }
 };
 
 exports.updateMovie = async (req, res) => {
   try {
-    const { title, description, release_date, genre_id, duration } = req.body;
+    const {
+      title,
+      description,
+      duration_minutes,
+      release_date,
+      posterImg,
+      trailer_url,
+      bannerImg,
+      language,
+      country,
+      studio,
+      summary
+    } = req.body;
+
     await pool.query(
-      'UPDATE movies SET title = ?, description = ?, release_date = ?, genre_id = ?, duration = ? WHERE id = ?',
-      [title, description, release_date, genre_id, duration, req.params.id]
+      `UPDATE movies 
+       SET title = ?, description = ?, duration_minutes = ?, release_date = ?, posterImg = ?, trailer_url = ?, bannerImg = ?, language = ?, country = ?, studio = ?, summary = ?
+       WHERE id = ?`,
+      [title, description, duration_minutes, release_date, posterImg, trailer_url, bannerImg, language, country, studio, summary, req.params.id]
     );
+
     res.json({ message: 'Фільм оновлено' });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ message: 'Помилка при оновленні фільму' });
   }
 };
@@ -123,6 +158,7 @@ exports.deleteMovie = async (req, res) => {
     await pool.query('DELETE FROM movies WHERE id = ?', [req.params.id]);
     res.json({ message: 'Фільм видалено' });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ message: 'Помилка при видаленні фільму' });
   }
 };

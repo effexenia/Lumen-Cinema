@@ -28,6 +28,11 @@ export const updateHall = async (id: number, hallData: { name: string; seat_rows
 };
 
 export const deleteHall = async (id: number) => {
-  const response = await axios.delete(`${API_URL}/halls/${id}`);
+   const token = localStorage.getItem('token');
+  const response = await axios.delete(`${API_URL}/halls/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
   return response.data;
 };

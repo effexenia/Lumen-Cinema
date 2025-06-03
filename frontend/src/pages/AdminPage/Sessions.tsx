@@ -37,19 +37,24 @@ export const Sessions = () => {
     setHalls(hallsData);
   };
 
-  // Helper function to format datetime for input[type="datetime-local"]
-  const formatDateTimeForInput = (dateTime: string) => {
-    const date = new Date(dateTime);
-    const isoString = date.toISOString();
-    return isoString.substring(0, 16); // "yyyy-MM-ddThh:mm" format
-  };
+// Updated helper functions
+const formatDateTimeForInput = (dateTime: string) => {
+  const date = new Date(dateTime);
+  // Get local date/time components
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  
+  return `${year}-${month}-${day}T${hours}:${minutes}`;
+};
+const convertToMySQLDateTime = (localDateTime: string) => {
+  const date = new Date(localDateTime);
+  const offsetDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000); // Урахування часової зони
+  return offsetDate.toISOString().slice(0, 19).replace('T', ' '); // → "YYYY-MM-DD HH:MM:SS"
+};
 
-  // Helper function to convert local datetime to ISO string
-  const convertToISODateTime = (localDateTime: string) => {
-    // Add seconds if not present
-    const fullDateTime = localDateTime.length === 16 ? `${localDateTime}:00` : localDateTime;
-    return new Date(fullDateTime).toISOString();
-  };
 
   const handleDelete = async (id: number) => {
     await deleteSession(id);
@@ -69,7 +74,7 @@ export const Sessions = () => {
     const sessionData = {
       movie_id: movie.id,
       hall_id: hall.id,
-      start_time: convertToISODateTime(data.start_time),
+      start_time: convertToMySQLDateTime(data.start_time),
       price: Number(data.price),
     };
 
