@@ -1,0 +1,109 @@
+.aboutPage {
+  background-color: #111110;
+  color: #fff;
+  font-family: 'Roboto', sans-serif;
+  padding: 2rem;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.logo {
+  height: 60px;
+  margin-bottom: 1rem;
+}
+
+.title {
+  font-family: 'Playfair Display', serif;
+  font-size: 3rem;
+  color: #FFD700;
+  margin: 0;
+}
+
+.subtitle {
+  font-size: 1.5rem;
+  color: #ccc;
+}
+
+.intro {
+  max-width: 800px;
+  margin: 0 auto 4rem auto;
+  line-height: 1.8;
+  font-size: 1.1rem;
+}
+
+.section {
+  margin-bottom: 4rem;
+}
+
+.section h2 {
+  color: #FFD700;
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  justify-content: center;
+}
+
+.card {
+  background-color: #1c1c1a;
+  border: 1px solid #FFD700;
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  max-width: 300px;
+  transition: transform 0.3s ease;
+}
+
+.card:hover {
+  transform: scale(1.03);
+}
+
+.eventList {
+  list-style: disc;
+  max-width: 700px;
+  margin: 0 auto;
+  padding-left: 2rem;
+  line-height: 1.6;
+}
+
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+}
+
+.gallery img {
+  width: 100%;
+  border-radius: 10px;
+  object-fit: cover;
+  height: 160px;
+}
+
+.footer {
+  background-color: #1a1a18;
+  padding: 2rem;
+  text-align: center;
+  border-top: 1px solid #FFD700;
+}
+
+.contacts {
+  margin-bottom: 1rem;
+}
+
+.contacts h3 {
+  color: #FFD700;
+  margin-bottom: 1rem;
+}
+
+.callToAction {
+  font-style: italic;
+  color: #FFD700;
+  margin-top: 1rem;
+}
