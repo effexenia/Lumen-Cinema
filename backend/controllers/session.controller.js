@@ -39,15 +39,23 @@ exports.getSessionById = async (req, res) => {
 exports.createSession = async (req, res) => {
   try {
     const { movie_id, hall_id, start_time, price } = req.body;
-    await db.query(
+    const [result] = await db.query(
       'INSERT INTO sessions (movie_id, hall_id, start_time, price) VALUES (?, ?, ?, ?)',
       [movie_id, hall_id, start_time, price]
     );
-    res.status(201).json({ message: 'Сеанс створено' });
+
+    const insertedId = result.insertId;
+
+    // Отримати щойно створений сеанс
+    const [sessionRows] = await db.query('SELECT * FROM sessions WHERE id = ?', [insertedId]);
+
+    res.status(201).json(sessionRows[0]); // ← Повертаємо повний об'єкт
   } catch (err) {
+    console.error(err);
     res.status(500).json({ message: 'Помилка при створенні сеансу' });
   }
 };
+
 
 exports.updateSession = async (req, res) => {
   try {
@@ -56,8 +64,12 @@ exports.updateSession = async (req, res) => {
       'UPDATE sessions SET movie_id = ?, hall_id = ?, start_time = ?, price = ? WHERE id = ?',
       [movie_id, hall_id, start_time, price, req.params.id]
     );
-    res.json({ message: 'Сеанс оновлено' });
+
+    const [updatedRows] = await db.query('SELECT * FROM sessions WHERE id = ?', [req.params.id]);
+
+    res.json(updatedRows[0]);
   } catch (err) {
+    console.error(err);
     res.status(500).json({ message: 'Помилка при оновленні сеансу' });
   }
 };

@@ -4,17 +4,30 @@ const db = require('../config/db');
 exports.getMyTickets = async (req, res) => {
   try {
     const [rows] = await db.query(
-      `SELECT t.*, s.start_time, m.title 
-       FROM tickets t 
-       JOIN sessions s ON t.session_id = s.id 
-       JOIN movies m ON s.movie_id = m.id 
-       WHERE t.user_id = ?`, [req.user.id]
+      `SELECT 
+         t.id AS ticket_id,
+         t.seat_row,
+         t.seat_col,
+         t.booked_at,
+         t.status,
+         s.start_time,
+         s.price,
+         m.title AS movie,
+         h.name AS hall
+       FROM tickets t
+       JOIN sessions s ON t.session_id = s.id
+       JOIN movies m ON s.movie_id = m.id
+       JOIN halls h ON s.hall_id = h.id
+       WHERE t.user_id = ?`,
+      [req.user.id]
     );
     res.json(rows);
   } catch (err) {
+    console.error(err);
     res.status(500).json({ message: 'Помилка при отриманні квитків' });
   }
 };
+
 
 exports.bookTicket = async (req, res) => {
   try {
@@ -41,7 +54,7 @@ exports.bookTicket = async (req, res) => {
   }
 };
 
-exports.cancelTicket = async (req, res) => {
+exports.deleteTicket = async (req, res) => {
   try {
     const [rows] = await db.query('SELECT * FROM tickets WHERE id = ?', [req.params.id]);
     const ticket = rows[0];
@@ -51,6 +64,22 @@ exports.cancelTicket = async (req, res) => {
     }
 
     await db.query('DELETE FROM tickets WHERE id = ?', [req.params.id]);
+    res.json({ message: 'Квиток скасовано' });
+  } catch (err) {
+    res.status(500).json({ message: 'Помилка при скасуванні квитка' });
+  }
+};
+
+exports.cancelTicket = async (req, res) => {
+  try {
+    const [rows] = await db.query('SELECT * FROM tickets WHERE id = ?', [req.params.id]);
+    const ticket = rows[0];
+
+    if (!ticket || ticket.user_id !== req.user.id) {
+      return res.status(403).json({ message: 'Немає доступу до цього квитка' });
+    }
+
+    await db.query('UPDATE tickets SET status = ? WHERE id = ?', ['cancelled', req.params.id]);
     res.json({ message: 'Квиток скасовано' });
   } catch (err) {
     res.status(500).json({ message: 'Помилка при скасуванні квитка' });

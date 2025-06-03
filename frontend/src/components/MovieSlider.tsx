@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { getAllMovies } from '../api/api.ts';
 import './MovieSlider.css';
+import TrailerButton from './TrailerButton.tsx';
 
 interface Movie {
   id: number;
@@ -8,6 +9,7 @@ interface Movie {
   description: string;
   bannerImg: string; // для баннера большая картинка
   posterImg: string; // для постера
+  trailer_url?: string; 
 }
 
 const MovieSlider: React.FC = () => {
@@ -50,7 +52,11 @@ const MovieSlider: React.FC = () => {
           <p>{movie.description}</p>
           <div className="movie-slider__buttons">
             <button className="btn-primary">Book tickets</button>
-            <button className="btn-secondary">▶ Watch trailer</button>
+            <TrailerButton 
+              trailerUrl={movie.trailer_url}
+              buttonClassName="btn-secondary"
+              modalClassName="trailerModal"
+            />
           </div>
         </div>
         <img src={getFullImageUrl(movie.posterImg)} alt={movie.title} className="movie-slider__poster" />

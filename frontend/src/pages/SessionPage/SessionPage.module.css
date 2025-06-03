@@ -1,5 +1,5 @@
 .page {
-  background-color: #0d0c1d;
+  background-color: #1b1a17;
   color: white;
   padding: 20px;
   font-family: sans-serif;
@@ -91,7 +91,7 @@
 
 .sidebar {
   width: 300px;
-  background-color: #1a1a2e;
+  background-color: #302d27;
   padding: 20px;
   border-radius: 8px;
 }
@@ -106,7 +106,7 @@
 }
 
 .tickets {
-  background-color: #292945;
+  background-color: #2c2626;
   padding: 20px;
   border-radius: 8px;
   margin-top: 20px;

@@ -1,5 +1,5 @@
 .page {
-    background-color: #0d0c1d;
+    background-color: #111110;
     color: white;
     padding: 30px;
     min-height: 100vh;
@@ -19,7 +19,7 @@
   }
   
   .ticketCard {
-    background-color: #1a1a2e;
+    background-color: #231f1f;
     padding: 20px;
     border-radius: 16px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);

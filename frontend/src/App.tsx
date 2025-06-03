@@ -10,6 +10,9 @@ import RegisterPopup from "./pages/LoginPage/RegisterPopup.tsx";
 import ProfilePage from "./pages/ProfilePage/ProfilePage.tsx";
 import MyTicketsPage from "./pages/MyTicketsPage/MyTicketsPage.tsx";
 import SessionPage from "./pages/SessionPage/SessionPage.tsx";
+import PaymentPage from "./pages/PaymentPage/PaymentPage.tsx";
+import { AdminPanel } from "./pages/AdminPage/AdminPanel.tsx";
+import ProtectedRoute from "./components/ProtectedRoutes.tsx";
 
 function App() {
   return (
@@ -27,6 +30,7 @@ function App() {
         <Route path="/register" element={<RegisterPopup/>}/>
         <Route path="/tickets" element={<MyTicketsPage />} />
         <Route path="/session/:id" element={<SessionPage />} />
+        <Route path="/payment" element={<PaymentPage />} />
         {/* Защищенные маршруты для пользователей */}
       {/* <Route element={<ProtectedRoute roles={['user', 'admin']} />}>
         <Route path="/profile" element={<ProfilePage />} />
@@ -34,11 +38,11 @@ function App() {
       </Route> */}
 
       {/* Защищенные маршруты только для админов */}
-      {/* <Route element={<ProtectedRoute roles={['admin']} />}>
-        <Route path="/admin/dashboard" element={<AdminDashboard />} />
-        <Route path="/admin/movies" element={<AdminMovies />} />
-        <Route path="/admin/sessions" element={<AdminSessions />} />
-      </Route> */}
+        <Route element={<ProtectedRoute roles={['admin']} />}>
+        <Route path="/admin/dashboard" element={<AdminPanel />} />
+        {/* <Route path="/admin/movies" element={<AdminMovies />} />
+        <Route path="/admin/sessions" element={<AdminSessions />} /> */}
+      </Route> 
       </Routes>
       <Footer />
     </BrowserRouter>

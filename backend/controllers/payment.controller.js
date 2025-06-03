@@ -9,7 +9,7 @@ exports.createPayment = async (req, res) => {
     const status = 'pending'; // статус на початку
 
     await db.query(
-      'INSERT INTO payments (ticket_id, payment_id, amount, status) VALUES (?, ?, ?, ?)',
+      'INSERT INTO payments (ticket_id, order_id, amount, status) VALUES (?, ?, ?, ?)',
       [ticket_id, paymentId, amount, status]
     );
     res.status(201).json({ paymentId });
@@ -38,3 +38,4 @@ exports.getAllPayments = async (req, res) => {
     res.status(500).json({ message: 'Помилка при отриманні списку оплат' });
   }
 };
+

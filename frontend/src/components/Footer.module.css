@@ -1,5 +1,5 @@
 .footer {
-  background-color: #0d0d0d;
+  background-color: #111110;
   color: #fff;
   padding: 2rem 1rem;
   font-family: "Arial", sans-serif;
@@ -18,7 +18,7 @@
   border: 1px solid #2c2c2c;
   padding: 1rem 1.5rem;
   border-radius: 10px;
-  color: #FFD700;
+  color: #ffd24b;
   font-weight: 600;
   font-size: 0.9rem;
   display: flex;
@@ -121,4 +121,10 @@
   color: #777;
   border-top: 1px solid #222;
   padding-top: 1rem;
+}
+
+.logoImage {
+  width: 250px;
+  height: auto;
+  display: block;
 }

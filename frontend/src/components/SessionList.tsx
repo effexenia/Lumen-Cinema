@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styles from "./SessionList.module.css";
 
 type Session = {
@@ -21,6 +22,7 @@ const getNextDays = (count: number): Date[] => {
 };
 
 const SessionList: React.FC<Props> = ({ sessions }) => {
+  const navigate = useNavigate();
   const days = getNextDays(7);
   const [selectedDate, setSelectedDate] = useState<string>(
     days[0].toISOString().split("T")[0]
@@ -32,6 +34,10 @@ const SessionList: React.FC<Props> = ({ sessions }) => {
       .split("T")[0];
     return sessionDate === selectedDate;
   });
+
+  const handleSessionClick = (sessionId: number) => {
+    navigate(`/session/${sessionId}`);
+  };
 
   return (
     <div className={styles.wrapper}>
@@ -64,7 +70,12 @@ const SessionList: React.FC<Props> = ({ sessions }) => {
         )}
 
         {filteredSessions.map((session) => (
-          <div key={session.id} className={styles.sessionItem}>
+          <div 
+            key={session.id} 
+            className={styles.sessionItem}
+            onClick={() => handleSessionClick(session.id)}
+            style={{ cursor: "pointer" }} 
+          >
             <span className={styles.time}>
               {new Date(session.start_time).toLocaleTimeString("uk-UA", {
                 hour: "2-digit",

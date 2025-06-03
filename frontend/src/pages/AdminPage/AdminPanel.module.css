@@ -1,0 +1,59 @@
+/* styles/adminPages.module.scss */
+
+.container {
+  background-color: #121212;
+  color: #f0f0f0;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+h2 {
+  color: #ffffff;
+  margin-bottom: 20px;
+}
+
+button {
+  background-color: #1f1f1f;
+  color: #ffffff;
+  border: 1px solid #444;
+  padding: 6px 12px;
+  margin: 0 5px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+
+  &:hover {
+    background-color: #333;
+  }
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  background-color: #1c1c1c;
+  border: 1px solid #333;
+
+  th, td {
+    border: 1px solid #333;
+    padding: 10px;
+    text-align: left;
+  }
+
+  th {
+    background-color: #222;
+  }
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+
+  li {
+    padding: 10px;
+    border-bottom: 1px solid #333;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+}

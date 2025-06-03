@@ -24,7 +24,7 @@ const LoginPopup = () => {
         
         // Для остальных данных можно сохранить объект (опционально)
         localStorage.setItem('user', JSON.stringify(response.user));
-        
+        window.dispatchEvent(new Event('authChange'));
         if (response.user.role === 'admin') {
           navigate('/admin/dashboard');
         } else {
@@ -90,7 +90,7 @@ const LoginPopup = () => {
           </div>
 
           <button type="submit" className={styles.loginButton}>
-            Login to Bolt →
+            Login to Lumen →
           </button>
         </form>
 

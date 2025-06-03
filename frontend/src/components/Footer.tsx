@@ -1,14 +1,14 @@
 import React from "react";
 import styles from "./Footer.module.css";
+import logo from '../assets/logo.png';
 import {
   FaInstagram,
   FaFacebookF,
   FaTwitter,
-  FaLinkedinIn,
   FaYoutube,
   FaHeadset,
   FaEnvelopeOpenText,
-  FaPaperPlane
+  FaTicketAlt,
 } from "react-icons/fa";
 
 const Footer: React.FC = () => {
@@ -17,47 +17,45 @@ const Footer: React.FC = () => {
       <div className={styles.topRow}>
         <div className={styles.iconBox}>
           <FaHeadset className={styles.icon} />
-          24/7 CUSTOMER CARE
+          24/7 Customer Support
         </div>
         <div className={styles.iconBox}>
           <FaEnvelopeOpenText className={styles.icon} />
-          RESEND BOOKING INFORMATION
+          Resend Booking Info
         </div>
         <div className={styles.iconBox}>
-          <FaPaperPlane className={styles.icon} />
-          SUBSCRIBE TO THE NEWSLETTER
+          <FaTicketAlt className={styles.icon} />
+          Subscribe for Movie Updates
         </div>
       </div>
 
       <div className={styles.divider}></div>
 
       <div className={styles.middleRow}>
-        <h2 className={styles.logo}>
-          Book
-          <span className={styles.yellow}>my</span>
-          ticket
-        </h2>
+      <div className={styles.logo}>
+        <img src={logo} alt="Lumen Cinema" className={styles.logoImage} />
+      </div>
 
         <nav className={styles.nav}>
-          <a href="#.">Home</a>
-          <a href="#/">Upcoming Movies</a>
-          <a href="#/">City</a>
-          <a href="#/">Your Tickets</a>
-          <a href="#/">Theatres</a>
+          <a href="/">Home</a>
+          <a href="/movies">Movies</a>
+          <a href="/sessions">Sessions</a>
+          <a href="/halls">Halls</a>
+          <a href="/tickets">My Tickets</a>
+          <a href="/contact">Contact Us</a>
         </nav>
 
         <div className={styles.socials}>
           <div className={styles.circle}><FaInstagram /></div>
           <div className={styles.circle}><FaFacebookF /></div>
           <div className={styles.circle}><FaTwitter /></div>
-          <div className={styles.circle}><FaLinkedinIn /></div>
           <div className={styles.circle}><FaYoutube /></div>
         </div>
       </div>
 
       <div className={styles.bottomRow}>
         <span>Terms & Conditions | Privacy Policy</span>
-        <span>©2023 Bookmyticket All Rights Reserved</span>
+        <span>©2025 Lumen Cinema. All Rights Reserved.</span>
       </div>
     </footer>
   );
