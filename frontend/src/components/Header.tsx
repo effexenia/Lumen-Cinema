@@ -4,6 +4,7 @@ import './Header.css';
 import logo from '../assets/logo.png';
 import loginIcon from '../assets/in.png';
 import logoutIcon from '../assets/out.png';
+import { Search } from './Search.tsx';
 
 export const Header = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('token'));
@@ -69,8 +70,11 @@ export const Header = () => {
         </nav>
 
         {/* Search */}
-        <div className="header__search">
+        {/* <div className="header__search">
           <input type="text" placeholder="Search..." />
+        </div> */}
+        <div className="header__search">
+          <Search />
         </div>
 
         {/* Auth Section */}

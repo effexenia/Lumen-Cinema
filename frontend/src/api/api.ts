@@ -39,6 +39,16 @@ export const deleteMovie = async (id: number) => {
   return response.data;
 };
 
+export const searchMovies = async (query: string) => {
+  try {
+    const res = await axios.get(`http://localhost:5000/api/movies/search?query=${encodeURIComponent(query)}`);
+    console.log('Відповідь API:', res.data); 
+    return res.data;
+  } catch (error) {
+    console.error('Помилка запиту:', error); 
+    return [];
+  }
+};
 export const getSessions = async () => {
   const response = await axios.get(`${API_URL}/sessions`)
   return response.data;

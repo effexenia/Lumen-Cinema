@@ -162,3 +162,36 @@ exports.deleteMovie = async (req, res) => {
     res.status(500).json({ message: 'Помилка при видаленні фільму' });
   }
 };
+
+exports.searchMovies = async (req, res) => {
+  try {
+    const { query } = req.query;
+console.log('Пошуковий запит:', query);
+    if (!query || query.trim().length < 2) {
+      return res.status(200).json([]); // Повертаємо пустий масив замість помилки
+    }
+
+    // Решта вашого коду залишається без змін
+    const searchQuery = query.replace(/[а-яА-ЯёЁ]/g, (char) => {
+      const translitMap = { 'а': 'a', 'б': 'b', 'в': 'v', /* ... */ };
+      return `${char}|${translitMap[char.toLowerCase()] || char}`;
+    });
+
+    const [rows] = await pool.query(
+      `SELECT 
+        id, title, posterImg, release_date
+      FROM movies
+      WHERE 
+        title LIKE ? COLLATE utf8mb4_unicode_ci
+        OR title LIKE ? COLLATE utf8mb4_unicode_ci
+      ORDER BY release_date DESC
+      LIMIT 10`,
+      [`%${query}%`, `%${searchQuery}%`]
+    );
+
+    res.json(rows || []);
+  } catch (err) {
+    console.error('Помилка пошуку:', err);
+    res.status(500).json({ message: 'Помилка сервера' });
+  }
+};
