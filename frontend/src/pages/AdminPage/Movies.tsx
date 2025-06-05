@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import {
   getAllMovies,
   getAllGenres,
-  getMovieById,
   createMovie,
   updateMovie,
   deleteMovie,

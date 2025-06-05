@@ -9,6 +9,7 @@ router.get('/all', authMiddleware, adminMiddleware, paymentController.getAllPaym
 router.post('/', paymentController.createPayment);
 router.get('/:ticketId', paymentController.getPaymentStatus);
 router.post('/liqpay', liqpay.generateLiqpayForm);
+router.post('/stripe-session', paymentController.createStripeSession);
 
 
 module.exports = router;

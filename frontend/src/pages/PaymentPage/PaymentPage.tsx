@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styles from './PaymentPage.module.css';
-import { createPayment, getLiqpayForm } from '../../api/paymentService.ts';
 
 interface PaymentData {
   movieId: number;
@@ -44,27 +43,25 @@ const handlePaymentSubmit = async () => {
   setIsProcessing(true);
 
   try {
-    // Емуляція ticketIds
-    const ticketIds = paymentData.selectedSeats.map((_, index) => Date.now() + index);
+    const ticketIds = paymentData.selectedSeats.map((_, index) => Date.now() + index); // умовно
+    const response = await fetch('http://localhost:5000/api/payments/stripe-session', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        ticketIds,
+        amount: paymentData.totalPrice
+      }),
+    });
 
-    const { data, signature } = await getLiqpayForm(ticketIds, paymentData.totalPrice);
-
-    // Створюємо форму для перенаправлення на LiqPay
-    const form = document.createElement('form');
-    form.method = 'POST';
-    form.action = 'https://www.liqpay.ua/api/3/checkout';
-    form.innerHTML = `
-      <input type="hidden" name="data" value="${data}" />
-      <input type="hidden" name="signature" value="${signature}" />
-    `;
-    document.body.appendChild(form);
-    form.submit();
+    const { url } = await response.json();
+    window.location.href = url;
   } catch (error) {
-    console.error('Помилка при оплаті:', error);
-    alert('Не вдалося ініціювати оплату');
+    console.error('Stripe помилка:', error);
+    alert('Помилка при створенні Stripe-сесії');
     setIsProcessing(false);
   }
 };
+
 
 
   if (!paymentData) {

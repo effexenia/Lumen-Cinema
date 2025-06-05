@@ -14,6 +14,7 @@ import PaymentPage from "./pages/PaymentPage/PaymentPage.tsx";
 import { AdminPanel } from "./pages/AdminPage/AdminPanel.tsx";
 import ProtectedRoute from "./components/ProtectedRoutes.tsx";
 import AboutPage from "./pages/AboutPage/AboutPage.tsx";
+import PaymentSuccess from "./pages/PaymentPage/PaymentSuccessPage.tsx";
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
         <Route path="/tickets" element={<MyTicketsPage />} />
         <Route path="/session/:id" element={<SessionPage />} />
         <Route path="/payment" element={<PaymentPage />} />
+        <Route path="/payment-success" element={<PaymentSuccess />} />
         <Route path="/about" element={<AboutPage />} />
         {/* Защищенные маршруты для пользователей */}
       {/* <Route element={<ProtectedRoute roles={['user', 'admin']} />}>

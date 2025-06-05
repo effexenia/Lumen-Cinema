@@ -49,7 +49,6 @@ const MoviePage: React.FC = () => {
   const [movie, setMovie] = useState<Movie | null>(null);
   const [loading, setLoading] = useState(true);
   const [sessions, setSessions] = useState<Session[]>([]);
-  const [showTrailer, setShowTrailer] = useState(false);
 
   const getFullImageUrl = (imageUrl: string): string => {
     if (!imageUrl) return "";
