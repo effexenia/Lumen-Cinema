@@ -39,19 +39,15 @@ exports.getAllPayments = async (req, res) => {
     res.status(500).json({ message: 'Помилка при отриманні списку оплат' });
   }
 };
-
 exports.createStripeSession = async (req, res) => {
   try {
-    const { ticketIds, amount } = req.body;
+    const { amount, session_id, selectedSeats } = req.body;
 
-    // Валідація вхідних даних
-    if (!ticketIds || !ticketIds.length || !amount) {
+    if (!amount || !session_id || !selectedSeats) {
       return res.status(400).json({ 
-        message: 'Відсутні обов\'язкові параметри: ticketIds або amount' 
+        message: 'Missing required parameters' 
       });
     }
-
-    console.log('Creating Stripe session with:', { ticketIds, amount });
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
@@ -60,28 +56,60 @@ exports.createStripeSession = async (req, res) => {
           currency: 'uah',
           product_data: {
             name: 'Квитки у кіно',
-            description: `Квитки: ${ticketIds.join(', ')}`,
           },
           unit_amount: Math.round(amount * 100),
         },
         quantity: 1,
       }],
       mode: 'payment',
-      success_url: `${process.env.CLIENT_URL}/payment-success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.CLIENT_URL}/payment-cancel`,
-      metadata: {
-        ticket_ids: ticketIds.join(','),
-      }
+      success_url: `${process.env.CLIENT_URL || 'http://localhost:3000'}/payment-success?session_id=${session_id}&seats=${encodeURIComponent(JSON.stringify(selectedSeats))}`,
+      cancel_url: `${process.env.CLIENT_URL || 'http://localhost:3000'}/payment-cancel`,
     });
-
-    console.log('Stripe session created:', session.id);
     
     res.json({ url: session.url });
   } catch (err) {
-    console.error('Stripe session error:', err);
+    console.error('Stripe error:', err);
     res.status(500).json({ 
-      message: 'Не вдалося створити Stripe-сесію',
+      message: 'Payment failed',
       error: err.message 
     });
   }
+};
+
+exports.handleStripeWebhook = async (req, res) => {
+  console.log('Webhook received:', req.body);
+  const sig = req.headers['stripe-signature'];
+  let event;
+
+  try {
+    event = stripe.webhooks.constructEvent(
+      req.body,
+      sig,
+      process.env.STRIPE_WEBHOOK_SECRET
+    );
+  } catch (err) {
+    return res.status(400).send(`Webhook Error: ${err.message}`);
+  }
+
+  if (event.type === 'checkout.session.completed') {
+    const session = event.data.object;
+    
+    try {
+      const { session_id, selectedSeats } = session.metadata;
+      const seats = JSON.parse(selectedSeats);
+      
+      for (const seat of seats) {
+        await db.query(
+          `UPDATE tickets SET status = 'paid' 
+           WHERE session_id = ? AND seat_row = ? AND seat_col = ?`,
+          [session_id, seat.row, seat.seat]
+        );
+      }
+      console.log('Tickets status updated to paid');
+    } catch (err) {
+      console.error('Error updating tickets:', err);
+    }
+  }
+
+  res.json({ received: true });
 };

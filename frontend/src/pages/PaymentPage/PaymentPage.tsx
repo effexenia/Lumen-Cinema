@@ -36,32 +36,35 @@ const PaymentPage = () => {
   const handleBackClick = () => {
     navigate(-1);
   };
-
 const handlePaymentSubmit = async () => {
   if (!paymentData || isProcessing) return;
 
   setIsProcessing(true);
 
   try {
-    const ticketIds = paymentData.selectedSeats.map((_, index) => Date.now() + index); // умовно
     const response = await fetch('http://localhost:5000/api/payments/stripe-session', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        ticketIds,
-        amount: paymentData.totalPrice
+        amount: paymentData.totalPrice,
+        session_id: paymentData.sessionId,
+        selectedSeats: paymentData.selectedSeats
       }),
     });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Помилка оплати');
+    }
 
     const { url } = await response.json();
     window.location.href = url;
   } catch (error) {
-    console.error('Stripe помилка:', error);
-    alert('Помилка при створенні Stripe-сесії');
+    console.error('Payment error:', error);
+    alert(error.message || 'Помилка при оплаті');
     setIsProcessing(false);
   }
 };
-
 
 
   if (!paymentData) {

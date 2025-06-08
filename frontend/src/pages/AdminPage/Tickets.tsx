@@ -35,9 +35,13 @@ export const Tickets = () => {
               <td>{ticket.movie}</td>
               <td>{new Date(ticket.start_time).toLocaleString()}</td>
               <td>{`R${ticket.seat_row}S${ticket.seat_col}`}</td>
-              <td>{ticket.status === 'booked' ? 'Заброньований' : 'Скасований'}</td>
               <td>
-                {ticket.status === 'booked' && (
+                {ticket.status === 'booked' && 'Заброньований'}
+                {ticket.status === 'cancelled' && 'Скасований'}
+                {ticket.status === 'paid' && 'Оплачено'}
+              </td>
+              <td>
+                {(ticket.status === 'booked' || ticket.status === 'paid') && (
                   <button onClick={() => handleCancel(ticket.ticket_id)}>
                     Cancel
                   </button>

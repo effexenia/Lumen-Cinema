@@ -28,31 +28,38 @@ exports.getMyTickets = async (req, res) => {
   }
 };
 
-
 exports.bookTicket = async (req, res) => {
   try {
-    const { session_id, seat_number } = req.body;
+    const { session_id, seats, user_id } = req.body;
+    const ticketIds = [];
 
-    // перевірка на зайнятість місця
-    const [existing] = await db.query(
-      'SELECT * FROM tickets WHERE session_id = ? AND seat_number = ?',
-      [session_id, seat_number]
-    );
+    for (const seat of seats) {
+      const { row, seat: col } = seat;
 
-    if (existing.length > 0) {
-      return res.status(409).json({ message: 'Місце вже зайняте' });
+      const [existing] = await db.query(
+        'SELECT * FROM tickets WHERE session_id = ? AND seat_row = ? AND seat_col = ?',
+        [session_id, row, col]
+      );
+
+      if (existing.length > 0) {
+        return res.status(409).json({ message: `Місце ${row} ряд, ${col} місце вже зайняте` });
+      }
+
+      const [result] = await db.query(`
+        INSERT INTO tickets (user_id, session_id, seat_row, seat_col, status, booked_at) 
+        VALUES (?, ?, ?, ?, 'booked', NOW())
+      `, [user_id, session_id, row, col]);
+
+      ticketIds.push(result.insertId);
     }
 
-    await db.query(
-      'INSERT INTO tickets (user_id, session_id, seat_number) VALUES (?, ?, ?)',
-      [req.user.id, session_id, seat_number]
-    );
-
-    res.status(201).json({ message: 'Квиток заброньовано' });
+    res.status(201).json({ message: 'Квитки заброньовано', ticketIds });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ message: 'Помилка при бронюванні квитка' });
   }
 };
+
 
 exports.deleteTicket = async (req, res) => {
   try {
@@ -89,11 +96,39 @@ exports.cancelTicket = async (req, res) => {
 exports.getSessionSeats = async (req, res) => {
   try {
     const [rows] = await db.query(
-      'SELECT seat_number FROM tickets WHERE session_id = ?',
+      `SELECT seat_row, seat_col, status FROM tickets 
+      WHERE session_id = ? 
+      AND (
+        status = 'paid' OR 
+        (status = 'booked' AND TIMESTAMPDIFF(MINUTE, booked_at, NOW()) < 10)
+      )`,
       [req.params.sessionId]
     );
-    res.json(rows.map(r => r.seat_number));
+    res.json(rows);
   } catch (err) {
     res.status(500).json({ message: 'Помилка при отриманні місць' });
+  }
+};
+
+exports.updateTicketStatus = async (req, res) => {
+  try {
+    const { session_id, selectedSeats } = req.body;
+    
+    if (!session_id || !selectedSeats) {
+      return res.status(400).json({ message: 'Missing required parameters' });
+    }
+
+    for (const seat of selectedSeats) {
+      await db.query(
+        `UPDATE tickets SET status = 'paid' 
+         WHERE session_id = ? AND seat_row = ? AND seat_col = ?`,
+        [session_id, seat.row, seat.seat]
+      );
+    }
+
+    res.status(200).json({ message: 'Tickets updated successfully' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Error updating tickets' });
   }
 };

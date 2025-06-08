@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import styles from "./SessionPage.module.css";
 import { FaMapMarkerAlt, FaInfoCircle } from "react-icons/fa";
-import { useParams } from "react-router-dom";
 import { getSessionById } from "../../api/sessionService.ts";
 import { getHalls } from "../../api/hallService.ts";
 import { getMovieById } from "../../api/api.ts";
+import { bookTicket } from "../../api/ticketService.ts";
+import { getSessionSeats } from "../../api/ticketService.ts";
 
 interface Seat {
   row: number;
@@ -27,94 +28,115 @@ interface Hall {
   seat_cols: number;
 }
 
-type Movie = {
+interface Movie {
   id: number;
   title: string;
   posterImg: string;
-};
+}
 
 const generateSeatMap = (rows: number, cols: number): number[][] => {
-  const seatMap: number[][] = [];
-  for (let i = 0; i < rows; i++) {
-    const row: number[] = [];
-    for (let j = 0; j < cols; j++) {
-      row.push(j + 1); // або row.unshift(j + 1) для відображення справа наліво
-    }
-    seatMap.push(row);
-  }
-  return seatMap;
+  return Array.from({ length: rows }, (_, rowIndex) =>
+    Array.from({ length: cols }, (_, seatIndex) => seatIndex + 1)
+  );
 };
 
-
 export default function SessionPage() {
-  const { id } = useParams(); // get session ID from route
+  const { id } = useParams();
+  const navigate = useNavigate();
+
   const [session, setSession] = useState<Session | null>(null);
   const [hall, setHall] = useState<Hall | null>(null);
   const [seatMap, setSeatMap] = useState<number[][]>([]);
   const [selectedSeats, setSelectedSeats] = useState<Seat[]>([]);
   const [movie, setMovie] = useState<Movie | null>(null);
-  const navigate = useNavigate();
-const handleContinueClick = () => {
-    if (!session || !session.price) {
-    console.error("Session data is not loaded");
-    return;
-  }
-  if (selectedSeats.length === 0) {
-    alert("Будь ласка, оберіть хоча б одне місце");
-    return;
-  }
+  const [unavailableSeats, setUnavailableSeats] = useState<
+  { row: number; seat: number; status: "paid" | "booked" }[]
+>([]);
 
-  navigate("/payment", {
-    state: {
-      movieId: session?.movie_id,
-      sessionId: session?.id,
-      selectedSeats,
-      totalPrice: selectedSeats.length * session?.price,
-      movieTitle: movie?.title,
-      sessionTime: session?.start_time,
-      hallName: hall?.name,
-      posterImg: movie?.posterImg
-    }
-  });
-};
-  
+
+
   const toggleSeatSelection = (row: number, seat: number) => {
-  const seatIndex = selectedSeats.findIndex(s => s.row === row && s.seat === seat);
-  if (seatIndex !== -1) {
-    // Видалити місце з вибраних
-    setSelectedSeats(prev => prev.filter((_, i) => i !== seatIndex));
-  } else {
-    // Додати місце
-    setSelectedSeats(prev => [...prev, { row, seat }]);
-  }
-};
+    setSelectedSeats((prev) => {
+      const exists = prev.find((s) => s.row === row && s.seat === seat);
+      return exists
+        ? prev.filter((s) => !(s.row === row && s.seat === seat))
+        : [...prev, { row, seat }];
+    });
+  };
 
-  useEffect(() => {
-const fetchData = async () => {
-  try {
-    if (!id) return;
-    const sessionData = await getSessionById(+id);
-    setSession(sessionData);
-
-    const allHalls = await getHalls();
-    const currentHall = allHalls.find((h: Hall) => h.id === sessionData.hall_id);
-    setHall(currentHall);
-
-    const movieData = await getMovieById(sessionData.movie_id);
-    setMovie(movieData);
-
-    if (currentHall) {
-      const map = generateSeatMap(currentHall.seat_rows, currentHall.seat_cols);
-      setSeatMap(map);
+  const handleContinueClick = async () => {
+    if (!session || selectedSeats.length === 0) {
+      alert("Будь ласка, оберіть місця");
+      return;
     }
-  } catch (error) {
-    console.error("Помилка при завантаженні даних:", error);
-  }
-};
 
+    const userIdStr = localStorage.getItem("userId");
+    if (!userIdStr) {
+      alert("Будь ласка, увійдіть у систему");
+      return;
+    }
+
+    try {
+      const userId = +userIdStr;
+      const response = await bookTicket(session.id, selectedSeats, userId);
+      const { ticketIds } = response;
+
+      navigate("/payment", {
+        state: {
+          movieId: session.movie_id,
+          sessionId: session.id,
+          selectedSeats,
+          totalPrice: selectedSeats.length * session.price,
+          movieTitle: movie?.title || "",
+          sessionTime: session.start_time,
+          hallName: hall?.name || "",
+          posterImg: movie?.posterImg || "",
+          ticketIds,
+        },
+      });
+    } catch (error: any) {
+      console.error("Помилка бронювання:", error);
+      alert(
+        error?.response?.data?.message ||
+          "Не вдалося забронювати місця. Можливо, деякі вже зайняті."
+      );
+    }
+  };
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!id) return;
+
+      try {
+        const sessionData = await getSessionById(+id);
+        setSession(sessionData);
+
+        const allHalls = await getHalls();
+        const currentHall = allHalls.find((h) => h.id === sessionData.hall_id);
+        setHall(currentHall || null);
+
+        const movieData = await getMovieById(sessionData.movie_id);
+        setMovie(movieData);
+
+        if (currentHall) {
+          setSeatMap(generateSeatMap(currentHall.seat_rows, currentHall.seat_cols));
+        }
+
+        const takenSeats = await getSessionSeats(+id);
+        setUnavailableSeats(
+          takenSeats.map((s: { seat_row: number; seat_col: number; status: "booked" | "paid" }) => ({
+            row: s.seat_row,
+            seat: s.seat_col,
+            status: s.status
+          }))
+        );
+      } catch (error) {
+        console.error("Помилка при завантаженні даних:", error);
+      }
+    };
 
     fetchData();
   }, [id]);
+
 
   if (!session || !hall) return <div>Завантаження...</div>;
 
@@ -123,7 +145,6 @@ const fetchData = async () => {
       <h1 className={styles.title}>Обери місця в залі</h1>
       <div className={styles.subtitle}>
         <span>
-          {/* Приклад форматування часу */}
           Фільм: {movie?.title}, {new Date(session.start_time).toLocaleString()}, Зал: {hall.name}
         </span>
       </div>
@@ -133,21 +154,38 @@ const fetchData = async () => {
           <div className={styles.screen}>Екран</div>
           <div className={styles.seatMap}>
             {seatMap.map((row, rowIndex) => (
-              <div key={rowIndex} className={styles.row}>
-                {row.map((seat) => {
-                  const isSelected = selectedSeats.some(
-                    (s) => s.row === rowIndex + 1 && s.seat === seat
-                  );
-                  return (
-                    <div
-                      key={seat}
-                      className={`${styles.seat} ${isSelected ? styles.selected : ""}`}
-                      onClick={() => toggleSeatSelection(rowIndex + 1, seat)}
-                    >
-                      {seat}
-                    </div>
-                  );
-                })}
+              <div key={rowIndex} className={styles.rowWithNumbers}>
+                <div className={styles.rowNumber}>{rowIndex + 1}</div>
+                <div className={styles.row}>
+                  {row.map((seat) => {
+                    const isSelected = selectedSeats.some(
+                      (s) => s.row === rowIndex + 1 && s.seat === seat
+                    );
+                    const seatData = unavailableSeats.find(
+                      (s) => s.row === rowIndex + 1 && s.seat === seat
+                    );
+                    const isPaid = seatData?.status === "paid";
+                    const isBooked = seatData?.status === "booked";
+
+                    return (
+                      <div
+                        key={seat}
+                        className={`
+                          ${styles.seat}
+                          ${isSelected ? styles.selected : ""}
+                          ${isPaid ? styles.unavailable : ""}
+                          ${isBooked ? styles.booked : ""}
+                        `}
+                        onClick={() => {
+                          if (!isPaid && !isBooked) toggleSeatSelection(rowIndex + 1, seat);
+                        }}
+                      >
+                        {seat}
+                      </div>
+                    );
+                  })}
+                </div>
+                <div className={styles.rowNumber}>{rowIndex + 1}</div>
               </div>
             ))}
           </div>
@@ -156,13 +194,13 @@ const fetchData = async () => {
               <span className={`${styles.square} ${styles.selected}`}></span> — Обрано
             </div>
             <div>
-              <span className={styles.square}></span> — {session.price} грн
+              <span className={styles.square}></span> — Вільне ({session.price} грн)
             </div>
             <div>
-              <span className={`${styles.square} ${styles.vip}`}></span> — VIP — {session.price + 100} грн
+              <span className={`${styles.square} ${styles.booked}`}></span> — Заброньовано
             </div>
             <div>
-              <span className={`${styles.square} ${styles.unavailable}`}></span> — Недоступні
+              <span className={`${styles.square} ${styles.unavailable}`}></span> — Оплачено
             </div>
           </div>
         </div>
@@ -177,9 +215,7 @@ const fetchData = async () => {
           <div className={styles.tickets}>
             {selectedSeats.map((seat, i) => (
               <div key={i} className={styles.ticketRow}>
-                <span>
-                  {seat.row} ряд, {seat.seat} місце
-                </span>
+                <span>{seat.row} ряд, {seat.seat} місце</span>
                 <span>{session.price} грн</span>
               </div>
             ))}
@@ -187,10 +223,13 @@ const fetchData = async () => {
               Всього: {selectedSeats.length} квитки
               <span>{selectedSeats.length * session.price} грн</span>
             </div>
-           <button className={styles.button} onClick={handleContinueClick}>Продовжити</button>
+            <button className={styles.button} onClick={handleContinueClick}>
+              Продовжити
+            </button>
           </div>
         </div>
       </div>
     </div>
   );
 }
+  

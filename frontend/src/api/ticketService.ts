@@ -9,7 +9,7 @@ export const getMyTickets = async () => {
   return response.data;
 };
 
-export const bookTickets = async (sessionId: number, seats: {row: number, seat: number}[], userId: number) => {
+export const bookTicket = async (sessionId: number, seats: {row: number, seat: number}[], userId: number) => {
   const response = await axios.post(`${API_URL}/tickets/book`, {
     session_id: sessionId,
     seats,
@@ -28,6 +28,6 @@ export const cancelTicket = async (ticketId: number) => {
 };
 
 export const getSessionSeats = async (sessionId: number) => {
-  const response = await axios.get(`${API_URL}/sessions/${sessionId}/seats`);
+  const response = await axios.get(`${API_URL}/tickets/session/${sessionId}`);
   return response.data;
 };

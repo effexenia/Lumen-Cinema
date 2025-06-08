@@ -6,5 +6,5 @@ export interface Ticket {
   movie: string;
   hall: string;
   price: number;
-  status: 'booked' | 'cancelled';
+  status: 'booked' | 'cancelled' | 'paid';
 }

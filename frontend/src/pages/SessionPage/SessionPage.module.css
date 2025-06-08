@@ -37,6 +37,7 @@
 .seatMap {
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 6px;
 }
 
@@ -139,4 +140,27 @@
   border-radius: 32px;
   cursor: pointer;
   font-weight: bold;
+}
+.booked {
+  background-color: #fcd54c !important;
+  cursor: not-allowed !important;
+  opacity: 0.7;
+}
+
+.unavailable {
+  background-color: #555;
+  cursor: not-allowed !important;
+}
+
+.rowWithNumbers {
+  display: flex;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.rowNumber {
+  width: 24px;
+  text-align: center;
+  font-weight: bold;
+  color: white;
 }
