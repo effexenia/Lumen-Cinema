@@ -7,4 +7,5 @@ export interface Ticket {
   hall: string;
   price: number;
   status: 'booked' | 'cancelled' | 'paid';
+  qr_code?: string;
 }

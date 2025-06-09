@@ -6,6 +6,7 @@ exports.getMyTickets = async (req, res) => {
     const [rows] = await db.query(
       `SELECT 
          t.id AS ticket_id,
+         t.session_id,
          t.seat_row,
          t.seat_col,
          t.booked_at,
