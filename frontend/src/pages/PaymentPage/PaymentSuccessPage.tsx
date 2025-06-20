@@ -18,7 +18,8 @@ const PaymentSuccess = () => {
           throw new Error('Missing payment data');
         }
 
-        const response = await fetch('http://localhost:5000/api/tickets/update-ticket-status', {
+        // 1. Оновлюємо статус квитків
+        const ticketRes = await fetch('http://localhost:5000/api/tickets/update-ticket-status', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -27,9 +28,21 @@ const PaymentSuccess = () => {
           }),
         });
 
-        if (!response.ok) {
-          const errorData = await response.json();
+        if (!ticketRes.ok) {
+          const errorData = await ticketRes.json();
           throw new Error(errorData.message || 'Update failed');
+        }
+
+        // 2. Підтверджуємо оплату (оновлюємо статус у таблиці payments)
+        const paymentRes = await fetch('http://localhost:5000/api/payments/confirm', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ session_id }),
+        });
+
+        if (!paymentRes.ok) {
+          const errorData = await paymentRes.json();
+          throw new Error(errorData.message || 'Payment confirmation failed');
         }
 
         setIsUpdating(false);

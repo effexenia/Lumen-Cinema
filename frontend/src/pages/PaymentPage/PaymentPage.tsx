@@ -11,6 +11,7 @@ interface PaymentData {
   sessionTime: string;
   hallName: string;
   posterImg: string;
+  ticketIds: number[];
 }
 
 const PaymentPage = () => {
@@ -48,7 +49,8 @@ const handlePaymentSubmit = async () => {
       body: JSON.stringify({
         amount: paymentData.totalPrice,
         session_id: paymentData.sessionId,
-        selectedSeats: paymentData.selectedSeats
+        selectedSeats: paymentData.selectedSeats,
+        ticket_ids: paymentData.ticketIds
       }),
     });
 

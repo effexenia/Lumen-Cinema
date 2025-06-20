@@ -9,6 +9,7 @@ router.post('/', paymentController.createPayment);
 router.get('/:ticketId', paymentController.getPaymentStatus);
 router.post('/stripe-session', paymentController.createStripeSession);
 router.post('/webhook', express.raw({ type: 'application/json' }), paymentController.handleStripeWebhook);
+router.post('/confirm', paymentController.confirmPayment);
 
 
 module.exports = router;

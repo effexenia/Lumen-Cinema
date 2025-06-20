@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
 import { QRCodeSVG } from "qrcode.react";
 import { FaPrint, FaQrcode, FaMoneyBillWave, FaTimes, FaSpinner } from "react-icons/fa";
 import ReactDOMServer from "react-dom/server";
@@ -26,7 +25,6 @@ const MyTicketsPage: React.FC = () => {
   const [isPrinting, setIsPrinting] = useState(false);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   const [filterStatus, setFilterStatus] = useState<"all" | "paid" | "booked" | "cancelled">("all");
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchTickets = async () => {
