@@ -5,16 +5,22 @@ const { validationResult } = require('express-validator');
 exports.getAllMovies = async (req, res) => {
   try {
     const { genre, search, sort } = req.query;
+
     let query = `
       SELECT 
-        m.id, 
-        m.title, 
-        m.description, 
-        m.summary, 
-        m.posterImg, 
-        m.release_date, 
+        m.id,
+        m.title,
+        m.description,
+        m.summary,
+        m.posterImg,
         m.bannerImg,
         m.trailer_url,
+        m.language,
+        m.country,
+        m.studio,
+        m.duration_minutes,
+        m.release_date,
+        m.created_at,
         GROUP_CONCAT(DISTINCT g.name) AS genres,
         IFNULL(AVG(r.rating), 0) AS averageRating
       FROM movies m
@@ -23,6 +29,7 @@ exports.getAllMovies = async (req, res) => {
       LEFT JOIN ratings r ON m.id = r.movie_id
       WHERE 1=1
     `;
+
     const params = [];
 
     if (genre) {
@@ -46,22 +53,35 @@ exports.getAllMovies = async (req, res) => {
     }
 
     const [rows] = await pool.query(query, params);
-    
+
     const movies = rows.map(row => ({
-      ...row,
+      id: row.id,
+      title: row.title,
+      description: row.description,
+      summary: row.summary,
+      posterImg: row.posterImg,
+      bannerImg: row.bannerImg,
+      trailer_url: row.trailer_url,
+      language: row.language,
+      country: row.country,
+      studio: row.studio,
+      duration_minutes: row.duration_minutes,
+      release_date: row.release_date,
+      created_at: row.created_at,
       genres: row.genres ? row.genres.split(',').map(name => ({ name })) : [],
-      averageRating: parseFloat(row.averageRating)
+      averageRating: parseFloat(row.averageRating),
     }));
 
     res.json(movies);
   } catch (err) {
     console.error('Error in getAllMovies:', err);
-    res.status(500).json({ 
+    res.status(500).json({
       message: 'Помилка при отриманні фільмів',
-      error: err.message 
+      error: err.message,
     });
   }
 };
+
 
 exports.getMovieById = async (req, res) => {
   try {
@@ -92,7 +112,6 @@ exports.getMovieById = async (req, res) => {
     res.status(500).json({ message: 'Помилка при отриманні фільму' });
   }
 };
-
 exports.createMovie = async (req, res) => {
   try {
     const {
@@ -106,23 +125,34 @@ exports.createMovie = async (req, res) => {
       language,
       country,
       studio,
-      summary
+      summary,
+      genres = [],
     } = req.body;
 
-    await pool.query(
+
+
+    const [result] = await pool.query(
       `INSERT INTO movies 
         (title, description, duration_minutes, release_date, posterImg, trailer_url, bannerImg, language, country, studio, summary) 
        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [title, description, duration_minutes, release_date, posterImg, trailer_url, bannerImg, language, country, studio, summary]
     );
 
-    res.status(201).json({ message: 'Фільм додано' });
+    const movieId = result.insertId;
+
+    if (Array.isArray(genres) && genres.length > 0) {
+      const genreValues = genres.map((genreId) => [movieId, genreId]);
+      await pool.query(
+        'INSERT INTO movie_genres (movie_id, genre_id) VALUES ?',
+        [genreValues]
+      );
+    }
+    res.status(201).json({ message: 'Фільм додано', id: movieId });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Помилка при додаванні фільму' });
   }
 };
-
 exports.updateMovie = async (req, res) => {
   try {
     const {
@@ -136,15 +166,43 @@ exports.updateMovie = async (req, res) => {
       language,
       country,
       studio,
-      summary
+      summary,
+      genres = [],
     } = req.body;
+
+    const movieId = req.params.id;
+
 
     await pool.query(
       `UPDATE movies 
        SET title = ?, description = ?, duration_minutes = ?, release_date = ?, posterImg = ?, trailer_url = ?, bannerImg = ?, language = ?, country = ?, studio = ?, summary = ?
        WHERE id = ?`,
-      [title, description, duration_minutes, release_date, posterImg, trailer_url, bannerImg, language, country, studio, summary, req.params.id]
+      [
+        title,
+        description,
+        duration_minutes,
+        release_date,
+        posterImg,
+        trailer_url,
+        bannerImg,
+        language,
+        country,
+        studio,
+        summary,
+        movieId,
+      ]
     );
+
+    // Оновлення жанрів
+    await pool.query('DELETE FROM movie_genres WHERE movie_id = ?', [movieId]);
+
+    if (Array.isArray(genres) && genres.length > 0) {
+      const genreValues = genres.map((genreId) => [movieId, genreId]);
+      await pool.query(
+        'INSERT INTO movie_genres (movie_id, genre_id) VALUES ?',
+        [genreValues]
+      );
+    }
 
     res.json({ message: 'Фільм оновлено' });
   } catch (err) {
@@ -152,6 +210,7 @@ exports.updateMovie = async (req, res) => {
     res.status(500).json({ message: 'Помилка при оновленні фільму' });
   }
 };
+
 
 exports.deleteMovie = async (req, res) => {
   try {
@@ -168,10 +227,9 @@ exports.searchMovies = async (req, res) => {
     const { query } = req.query;
 console.log('Пошуковий запит:', query);
     if (!query || query.trim().length < 2) {
-      return res.status(200).json([]); // Повертаємо пустий масив замість помилки
+      return res.status(200).json([]); 
     }
 
-    // Решта вашого коду залишається без змін
     const searchQuery = query.replace(/[а-яА-ЯёЁ]/g, (char) => {
       const translitMap = { 'а': 'a', 'б': 'b', 'в': 'v', /* ... */ };
       return `${char}|${translitMap[char.toLowerCase()] || char}`;

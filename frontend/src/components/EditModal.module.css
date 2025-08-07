@@ -16,20 +16,23 @@
   padding: 24px;
   border-radius: 8px;
   color: #fff;
-  width: 400px;
-  max-width: 90%;
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
 }
 
 .modal h2 {
   margin-bottom: 16px;
 }
 
-.modal label {
+.label {
   display: block;
-  margin-bottom: 12px;
+  margin-bottom: 16px;
 }
 
-.modal input {
+.input {
   width: 100%;
   padding: 8px;
   background: #333;
@@ -57,4 +60,48 @@
 
 .cancel {
   background: #666;
+}
+
+/* EditModal.module.css або окремий CSS */
+.react-select__control {
+  background-color: #333;
+  border: 1px solid #444;
+  border-radius: 4px;
+  color: white;
+  min-height: 38px;
+}
+
+.react-select__menu {
+  background-color: #1c1c1c;
+  color: white;
+}
+
+.react-select__option {
+  background-color: #1c1c1c;
+  color: white;
+  cursor: pointer;
+}
+
+.react-select__option--is-focused {
+  background-color: #2d72d9;
+  color: white;
+}
+
+.react-select__multi-value {
+  background-color: #2d72d9;
+  color: white;
+}
+
+.react-select__multi-value__label {
+  color: white;
+}
+
+.react-select__multi-value__remove {
+  color: white;
+  cursor: pointer;
+}
+
+.react-select__multi-value__remove:hover {
+  background-color: #1c1c1c;
+  color: #2d72d9;
 }

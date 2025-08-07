@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import styles from './TrailerButton.module.css'; // Создайте соответствующий CSS модуль
+import styles from './TrailerButton.module.css'; 
 
 interface TrailerButtonProps {
   trailerUrl?: string;
@@ -52,7 +52,7 @@ const TrailerButton: React.FC<TrailerButtonProps> = ({
         className={`${styles.trailerButton} ${buttonClassName}`}
         onClick={handleButtonClick}
       >
-        &#x23F5; Watch Trailer
+        &#x23F5; Трейлер
       </button>
 
       {showTrailer && trailerUrl && (
@@ -74,6 +74,7 @@ const TrailerButton: React.FC<TrailerButtonProps> = ({
             {videoError ? (
               <div className={styles.videoError}>Не удалось загрузить трейлер</div>
             ) : extractVideoId(trailerUrl) ? (
+              // eslint-disable-next-line jsx-a11y/iframe-has-title
               <iframe
                 width="100%"
                 height="100%"

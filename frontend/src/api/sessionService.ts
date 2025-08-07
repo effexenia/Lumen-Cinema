@@ -28,7 +28,7 @@ export const createSession = async (sessionData: {
   return response.data;
 };
 
-export const updateSession = async (
+export const updateSession = async ( 
   id: number,
   sessionData: {
     movie_id: number;
@@ -37,13 +37,17 @@ export const updateSession = async (
     price: number;
   }
 ) => {
+  const token = localStorage.getItem('token'); 
+
   const response = await axios.put(`${API_URL}/sessions/${id}`, sessionData, {
     headers: {
       Authorization: `Bearer ${token}`
     }
   });
+
   return response.data;
 };
+
 
 
 export const deleteSession = async (id: number) => {

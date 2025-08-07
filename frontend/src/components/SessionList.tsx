@@ -25,15 +25,16 @@ const SessionList: React.FC<Props> = ({ sessions }) => {
   const navigate = useNavigate();
   const days = getNextDays(7);
   const [selectedDate, setSelectedDate] = useState<string>(
-    days[0].toISOString().split("T")[0]
+    days[0].toLocaleDateString("sv-SE") // YYYY-MM-DD у локальному часі
   );
 
-  const filteredSessions = sessions.filter((session) => {
-    const sessionDate = new Date(session.start_time)
-      .toISOString()
-      .split("T")[0];
-    return sessionDate === selectedDate;
-  });
+  const filteredSessions = sessions
+    .filter((session) => {
+      const sessionDate = new Date(session.start_time)
+        .toLocaleDateString("sv-SE"); // формат YYYY-MM-DD
+      return sessionDate === selectedDate;
+    })
+    .sort((a, b) => new Date(a.start_time).getTime() - new Date(b.start_time).getTime());
 
   const handleSessionClick = (sessionId: number) => {
     navigate(`/session/${sessionId}`);
@@ -45,7 +46,7 @@ const SessionList: React.FC<Props> = ({ sessions }) => {
 
       <div className={styles.dateSelector}>
         {days.map((day) => {
-          const dateStr = day.toISOString().split("T")[0];
+          const dateStr = day.toLocaleDateString("sv-SE");
           return (
             <button
               key={dateStr}

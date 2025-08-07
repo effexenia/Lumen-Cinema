@@ -4,7 +4,8 @@ import { FaPrint, FaQrcode, FaMoneyBillWave, FaTimes, FaSpinner } from "react-ic
 import ReactDOMServer from "react-dom/server";
 import styles from "./MyTicketsPage.module.css";
 import { getMyTickets, cancelTicket } from "../../api/ticketService.ts";
-import PrintLayout from "../../components/PrintableTicket.tsx";
+import PrintableTicket from "../../components/PrintableTicket.tsx";
+import printableTicketCss from "../../components/PrintableTicketStyles.ts";
 
 interface Ticket {
   ticket_id: number;
@@ -40,43 +41,42 @@ const MyTicketsPage: React.FC = () => {
     fetchTickets();
   }, []);
 
-  const handlePrint = useCallback(async (ticket: Ticket) => {
-    setIsPrinting(true);
-    try {
-      const printWindow = window.open('', '_blank');
-      if (!printWindow) {
-        alert('Дозвольте відкриття спливаючих вікон для друку');
-        return;
-      }
-
-      const printContent = `
-        <!DOCTYPE html>
-        <html>
-          <head>
-            <title>Квиток ${ticket.ticket_id}</title>
-            <style>
-              @page { size: auto; margin: 0; }
-              body { margin: 0; padding: 0; -webkit-print-color-adjust: exact; }
-            </style>
-          </head>
-          <body>
-            ${ReactDOMServer.renderToString(<PrintLayout ticket={ticket} />)}
-          </body>
-        </html>
-      `;
-
-      printWindow.document.write(printContent);
-      printWindow.document.close();
-      await new Promise(resolve => setTimeout(resolve, 300));
-      printWindow.print();
-      setTimeout(() => printWindow.close(), 1000);
-    } catch (error) {
-      console.error("Помилка при друку:", error);
-      alert("Не вдалося надрукувати квиток");
-    } finally {
-      setIsPrinting(false);
+ const handlePrint = useCallback(async (ticket: Ticket) => {
+  setIsPrinting(true);
+  try {
+    const printWindow = window.open('', '_blank');
+    if (!printWindow) {
+      alert('Дозвольте відкриття спливаючих вікон для друку');
+      return;
     }
-  }, []);
+
+    const printContent = `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>Квиток ${ticket.ticket_id}</title>
+          <style>
+            ${printableTicketCss}
+          </style>
+        </head>
+        <body>
+          ${ReactDOMServer.renderToString(<PrintableTicket ticket={ticket} />)}
+        </body>
+      </html>
+    `;
+
+    printWindow.document.write(printContent);
+    printWindow.document.close();
+    await new Promise(resolve => setTimeout(resolve, 300));
+    printWindow.print();
+    setTimeout(() => printWindow.close(), 1000);
+  } catch (error) {
+    console.error("Помилка при друку:", error);
+    alert("Не вдалося надрукувати квиток");
+  } finally {
+    setIsPrinting(false);
+  }
+}, []);
 
   const handleCancel = async (ticketId: number) => {
     if (!window.confirm("Ви впевнені, що хочете скасувати квиток?")) return;

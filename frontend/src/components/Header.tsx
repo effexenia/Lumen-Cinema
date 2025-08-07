@@ -10,14 +10,12 @@ export const Header = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('token'));
   const [user, setUser] = useState(() => JSON.parse(localStorage.getItem('user') || 'null'));
 
-  // Обновляем состояние при изменении localStorage (имитация)
   useEffect(() => {
     const handleStorageChange = () => {
       setIsLoggedIn(!!localStorage.getItem('token'));
       setUser(JSON.parse(localStorage.getItem('user') || 'null'));
     };
 
-    // Подписываемся на кастомное событие (будем вызывать при логине/логауте)
     window.addEventListener('authChange', handleStorageChange);
 
     return () => {
@@ -31,7 +29,6 @@ export const Header = () => {
     setIsLoggedIn(false);
     setUser(null);
 
-    // Можно вручную вызвать событие, чтобы другие компоненты могли обновиться
     window.dispatchEvent(new Event('authChange'));
 
     window.location.href = '/';
@@ -52,20 +49,20 @@ export const Header = () => {
               to="/admin/dashboard"
               className={({ isActive }) => (isActive ? 'header__link active' : 'header__link')}
             >
-              Dashboard
+              Адмін
             </NavLink>
           )}
           <NavLink to="/" className={({ isActive }) => (isActive ? 'header__link active' : 'header__link')}>
-            Home
+            Головна
           </NavLink>
           <NavLink to="/about" className={({ isActive }) => (isActive ? 'header__link active' : 'header__link')}>
-            About Us
+            Про кінотеатр
           </NavLink>
           <NavLink to="/tickets" className={({ isActive }) => (isActive ? 'header__link active' : 'header__link')}>
-            My Tickets
+            Мої квитки
           </NavLink>
           <NavLink to="/profile" className={({ isActive }) => (isActive ? 'header__link active' : 'header__link')}>
-            Profile
+            Кабінет
           </NavLink>
         </nav>
 

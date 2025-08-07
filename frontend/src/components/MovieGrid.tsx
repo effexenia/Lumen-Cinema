@@ -45,7 +45,7 @@ const MovieGrid = () => {
   return (
     <section className="movie-grid">
       <div className="movie-grid__header">
-        <h2>Now Showing</h2>
+        <h2>Зараз у кіно</h2>
         <div className="filters">
           <select
             className="filter-dropdown"
@@ -55,7 +55,7 @@ const MovieGrid = () => {
               setSelectedGenreName(value || null);
             }}
           >
-            <option value="">All Genres</option>
+            <option value="">Всі жанри</option>
             {genres.map((genre) => (
               <option key={genre.id} value={genre.name}>
                 {genre.name}

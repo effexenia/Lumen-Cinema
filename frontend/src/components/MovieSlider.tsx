@@ -51,7 +51,7 @@ const MovieSlider: React.FC = () => {
           <h1>{movie.title}</h1>
           <p>{movie.description}</p>
           <div className="movie-slider__buttons">
-            <button className="btn-primary">Book tickets</button>
+            <button className="btn-primary">Придбати білет</button>
             <TrailerButton 
               trailerUrl={movie.trailer_url}
               buttonClassName="btn-secondary"
