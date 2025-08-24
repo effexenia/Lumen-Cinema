@@ -36,16 +36,16 @@ const RegisterPopup = () => {
     <div className={styles.overlay}>
       <div className={styles.popup}>
         <div className={styles.logoContainer}>
-          <div className={styles.logoCircle}>⚡</div>
+          <div className={styles.logoCircle}>✨</div>
           <span className={styles.logoText}>LUMEN</span>
         </div>
 
-        <h2 className={styles.welcomeTitle}>Create account</h2>
-        <p className={styles.welcomeSubtitle}>Please fill the form to sign up</p>
+        <h2 className={styles.welcomeTitle}>Створити акаунт</h2>
+        <p className={styles.welcomeSubtitle}>Заповніть поля для реєстації</p>
 
         <form className={styles.form} onSubmit={handleSubmit}>
           <div className={styles.inputGroup}>
-            <label className={styles.label}>Full Name</label>
+            <label className={styles.label}>ПІБ</label>
             <input
               type="text"
               value={name}
@@ -57,7 +57,7 @@ const RegisterPopup = () => {
           </div>
 
           <div className={styles.inputGroup}>
-            <label className={styles.label}>Email Address</label>
+            <label className={styles.label}>Електронна пошта</label>
             <input
               type="email"
               value={email}
@@ -69,7 +69,7 @@ const RegisterPopup = () => {
           </div>
 
           <div className={styles.inputGroup}>
-            <label className={styles.label}>Password</label>
+            <label className={styles.label}>Пароль</label>
             <div className={styles.passwordWrapper}>
               <input
                 type={showPassword ? 'text' : 'password'}
@@ -91,7 +91,7 @@ const RegisterPopup = () => {
           </div>
 
           <div className={styles.inputGroup}>
-            <label className={styles.label}>Confirm Password</label>
+            <label className={styles.label}>Підтвердити Пароль</label>
             <div className={styles.passwordWrapper}>
               <input
                 type={showConfirm ? 'text' : 'password'}
@@ -113,8 +113,8 @@ const RegisterPopup = () => {
           </div>
 
           <p className={styles.footerText}>
-            Already have an account?{' '}
-            <a href="/login" className={styles.createAccount}>Login to Lumen</a>
+            Вже маєте акаунт?{' '}
+            <a href="/login" className={styles.createAccount}>Логін</a>
           </p>
 
           <button type="submit" className={styles.loginButton}>

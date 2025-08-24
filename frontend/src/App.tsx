@@ -4,7 +4,7 @@ import { Header } from "./components/Header.tsx";
 import Footer from "./components/Footer.tsx";
 import React from "react";
 import MoviePage from './pages/MoviePage/MoviePage.tsx'; 
-import LoginPopup from "./pages/LoginPage/LoginPopup.tsx";
+import LoginPopup from "./pages/LoginPage/LoginPopUp.tsx";
 import RegisterPopup from "./pages/LoginPage/RegisterPopup.tsx";
 //import ProtectedRoute from './components/ProtectedRoute';
 import ProfilePage from "./pages/ProfilePage/ProfilePage.tsx";

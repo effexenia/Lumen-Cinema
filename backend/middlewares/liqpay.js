@@ -31,7 +31,6 @@ exports.generateLiqpayForm = async (req, res) => {
       .update(private_key + data + private_key)
       .digest('base64');
 
-    // Зберігаємо в базу даних (використовуємо 'id' замість 'ticket_id')
     for (const ticketId of ticketIds) {
       await db.query(`
         INSERT INTO payments (id, amount, status) 

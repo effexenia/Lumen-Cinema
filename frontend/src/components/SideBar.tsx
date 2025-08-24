@@ -4,8 +4,8 @@ export const Sidebar = ({ selectedTab, setSelectedTab }) => (
   <div
     style={{
       width: '220px',
-      backgroundColor: '#1a1815', // чуть светлее чем #111110, с коричнево-серым подтоном
-      color: '#d8cfc4', // мягкий светлый бежевый
+      backgroundColor: '#1a1815',
+      color: '#d8cfc4',
       padding: '24px 16px',
       height: '100vh',
       display: 'flex',
@@ -14,24 +14,24 @@ export const Sidebar = ({ selectedTab, setSelectedTab }) => (
     }}
   >
     <h2 style={{ color: '#f0e9df', fontSize: '20px', marginBottom: '32px' }}>
-      🎥 Cinema Admin
+      🎥 Панель адміністратора
     </h2>
     <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
       {[
-        { label: '📊 Dashboard', key: 'dashboard' },
-        { label: '👤 Users', key: 'users' },
-        { label: '🎞️ Movies', key: 'movies' },
-        { label: '🎬 Sessions', key: 'sessions' },
-        { label: '💺 Halls', key: 'halls' },
-        { label: '🎟️ Tickets', key: 'tickets' },
-        { label: '💳 Payments', key: 'payments' },
+        { label: '📊 Статистика', key: 'dashboard' },
+        { label: '👤 Користувачі', key: 'users' },
+        { label: '🎞️ Фільми', key: 'movies' },
+        { label: '🎬 Сесії', key: 'sessions' },
+        { label: '💺 Зали', key: 'halls' },
+        { label: '🎟️ Квитки', key: 'tickets' },
+        { label: '💳 Платежі', key: 'payments' },
       ].map((tab) => (
         <li
           key={tab.key}
           style={{
             padding: '10px 14px',
-            backgroundColor: selectedTab === tab.key ? '#3e362f' : 'transparent', // более светлый коричневый при выборе
-            color: selectedTab === tab.key ? '#f5f1e8' : '#b3a999', // светлый бежевый для активного, теплый серо-бежевый для остальных
+            backgroundColor: selectedTab === tab.key ? '#3e362f' : 'transparent', 
+            color: selectedTab === tab.key ? '#f5f1e8' : '#b3a999', 
             cursor: 'pointer',
             borderRadius: '8px',
             marginBottom: '8px',

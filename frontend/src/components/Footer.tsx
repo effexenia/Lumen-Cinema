@@ -38,11 +38,11 @@ const Footer: React.FC = () => {
 
         <nav className={styles.nav}>
           <a href="/">Home</a>
-          <a href="/movies">Movies</a>
+          <a href="/">Movies</a>
           <a href="/sessions">Sessions</a>
           <a href="/halls">Halls</a>
           <a href="/tickets">My Tickets</a>
-          <a href="/contact">Contact Us</a>
+          <a href="/about">Contact Us</a>
         </nav>
 
         <div className={styles.socials}>

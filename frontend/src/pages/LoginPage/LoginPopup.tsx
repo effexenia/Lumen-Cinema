@@ -17,12 +17,10 @@ const LoginPopup = () => {
       try {
         const response = await authService.login({ email, password });
         
-        // Сохраняем данные единообразно:
         localStorage.setItem('token', response.token);
         localStorage.setItem('userId', response.user.id.toString()); 
         localStorage.setItem('userRole', response.user.role);
         
-        // Для остальных данных можно сохранить объект (опционально)
         localStorage.setItem('user', JSON.stringify(response.user));
         window.dispatchEvent(new Event('authChange'));
         if (response.user.role === 'admin') {
@@ -39,16 +37,16 @@ const LoginPopup = () => {
     <div className={styles.overlay}>
       <div className={styles.popup}>
         <div className={styles.logoContainer}>
-          <div className={styles.logoCircle}>⚡</div>
+          <div className={styles.logoCircle}>✨</div>
           <span className={styles.logoText}>LUMEN</span>
         </div>
 
-        <h2 className={styles.welcomeTitle}>Welcome back!</h2>
-        <p className={styles.welcomeSubtitle}>Please login to your account</p>
+        <h2 className={styles.welcomeTitle}>З поверненням!</h2>
+        <p className={styles.welcomeSubtitle}>Будьласка увійдіть у свій акаунт</p>
 
         <form className={styles.form} onSubmit={handleSubmit}>
           <div className={styles.inputGroup}>
-            <label className={styles.label}>Username/Email Address</label>
+            <label className={styles.label}>Електронна пошта</label>
             <input
               type="email"
               value={email}
@@ -60,7 +58,7 @@ const LoginPopup = () => {
           </div>
 
           <div className={styles.inputGroup}>
-            <label className={styles.label}>Password</label>
+            <label className={styles.label}>Пароль</label>
             <div className={styles.passwordWrapper}>
               <input
                 type="password"
@@ -82,21 +80,17 @@ const LoginPopup = () => {
           </div>
 
           <div className={styles.options}>
-            <label className={styles.checkboxLabel}>
-              <input type="checkbox" />
-              Remember me
-            </label>
-            <a href="#/" className={styles.forgotLink}>Forgot password?</a>
+            <a href="#/" className={styles.forgotLink}>Забули пароль?</a>
           </div>
 
           <button type="submit" className={styles.loginButton}>
-            Login to Lumen →
+            Увійти →
           </button>
         </form>
 
         <p className={styles.footerText}>
-          Don’t have an account yet?{' '}
-          <a href="/register" className={styles.createAccount}>Create a Lumen account</a>
+          Не маєте акаунту?{' '}
+          <a href="/register" className={styles.createAccount}>Зареєструватися</a>
         </p>
       </div>
     </div>

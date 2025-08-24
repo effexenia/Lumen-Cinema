@@ -1,6 +1,6 @@
 /* Загальний стиль */
 .header {
-    background-color: #111110; /* Темний фон */
+    background-color: #111110;
     padding: 10px 20px;
   }
   
@@ -17,13 +17,13 @@
   .header__logo {
     font-size: 24px;
     font-weight: bold;
-    color: #FFD700; /* Золотий */
+    color: #FFD700;
     text-decoration: none;
     
   }
   
   .header__logo span {
-    color: white; /* Можна зробити "Cinema" білим */
+    color: white;
   }
   
   .header__logo img {
@@ -53,10 +53,10 @@
     display: block;
     width: 0;
     height: 2px;
-    background: #FFD700; /* Золотая линия */
+    background: #FFD700; 
     transition: width 0.3s;
     position: absolute;
-    bottom: -4px; /* чуть ниже текста */
+    bottom: -4px; 
     left: 0;
   }
   .header__link.active {
@@ -92,5 +92,5 @@
     align-items: center;
   }
   .header__logout-btn img {
-    display: block; /* Приберемо нижній відступ у картинки */
+    display: block; 
   }

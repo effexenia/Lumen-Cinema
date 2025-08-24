@@ -23,12 +23,10 @@ export const Sessions = () => {
       getHalls()
     ]);
     
-    // Add movie and hall names to sessions
     const sessionsWithNames = sessionsData.map(session => ({
       ...session,
       movie_title: moviesData.find(m => m.id === session.movie_id)?.title,
       hall_name: hallsData.find(h => h.id === session.hall_id)?.name,
-      // Format the datetime for the datetime-local input
       start_time: formatDateTimeForInput(session.start_time)
     }));
     
@@ -37,10 +35,8 @@ export const Sessions = () => {
     setHalls(hallsData);
   };
 
-// Updated helper functions
 const formatDateTimeForInput = (dateTime: string) => {
   const date = new Date(dateTime);
-  // Get local date/time components
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, '0');
   const day = String(date.getDate()).padStart(2, '0');
@@ -51,8 +47,8 @@ const formatDateTimeForInput = (dateTime: string) => {
 };
 const convertToMySQLDateTime = (localDateTime: string) => {
   const date = new Date(localDateTime);
-  const offsetDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000); // Урахування часової зони
-  return offsetDate.toISOString().slice(0, 19).replace('T', ' '); // → "YYYY-MM-DD HH:MM:SS"
+  const offsetDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+  return offsetDate.toISOString().slice(0, 19).replace('T', ' '); 
 };
 
 
@@ -62,7 +58,6 @@ const convertToMySQLDateTime = (localDateTime: string) => {
   };
 
   const handleSave = async (data: any) => {
-    // Find IDs by names
     const movie = movies.find(m => m.title === data.movie_title);
     const hall = halls.find(h => h.name === data.hall_name);
     
@@ -111,7 +106,7 @@ const convertToMySQLDateTime = (localDateTime: string) => {
           id: 0,
           movie_id: 0,
           hall_id: 0,
-          start_time: formatDateTimeForInput(new Date().toISOString()), // Current time as default
+          start_time: formatDateTimeForInput(new Date().toISOString()),
           price: 0,
           movie_title: '',
           hall_name: ''

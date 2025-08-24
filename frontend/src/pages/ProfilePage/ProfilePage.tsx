@@ -42,7 +42,7 @@ const ProfilePage: React.FC = () => {
     const fetchUser = async () => {
       try {
         const response = await getProfile(userId);
-        const userData = response.user; // Извлекаем данные пользователя
+        const userData = response.user; 
         setUser(userData);
         setFormData({
           name: userData.name || '',
@@ -92,7 +92,7 @@ const handleSave = async () => {
   }
 
   try {
-    const response = await updateProfile(userId, data); // використовуємо API з userService.ts
+    const response = await updateProfile(userId, data); 
 
     setUser(response.user);
     setFormData(prev => ({
@@ -116,7 +116,7 @@ const handleSave = async () => {
 
   const handleLogout = () => {
     localStorage.removeItem('userId');
-    localStorage.removeItem('token'); // якщо ти зберігаєш токен
+    localStorage.removeItem('token'); 
     navigate('/login');
   };
   

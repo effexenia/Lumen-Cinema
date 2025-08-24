@@ -139,7 +139,7 @@
   
   .trailerButton {
     background-color: #111110d4;
-    color: #FFD700; /* Если по картинке текст белый, можно заменить на #fff */
+    color: #FFD700; 
     padding: 12px 24px;
     border: 1px solid #FFD700;
     border-radius: 25px;
@@ -154,7 +154,6 @@
   
   .trailerButton:hover {
     background-color: #2f2f2c;
-    /* При желании можно изменить цвет границы при hover */
   }
   
   .genreTag {

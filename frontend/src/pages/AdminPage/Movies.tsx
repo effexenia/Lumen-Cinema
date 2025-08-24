@@ -30,12 +30,10 @@ const handleSave = async (data: any) => {
 
   if (isAdding) {
     const newMovie = await createMovie(data);
-    // Можно просто добавить новый фильм в стейт
     setMovies(prev => [...prev, newMovie]);
     setIsAdding(false);
   } else if (editingMovie) {
     await updateMovie(editingMovie.id, data);
-    // После обновления получаем свежие данные с сервера
     const freshMovies = await getAllMovies();
     setMovies(freshMovies);
     setEditingMovie(null);

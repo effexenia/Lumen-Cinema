@@ -1,6 +1,6 @@
 .reviewsSection {
-  background-color: #111110; /* темно-коричневий */
-  color: #f5deb3; /* світло-золотий */
+  background-color: #111110; 
+  color: #f5deb3; 
   padding: 2rem;
   border-radius: 20px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
@@ -12,7 +12,7 @@
 .sectionTitle {
   font-size: 2rem;
   margin-bottom: 1.5rem;
-  color: #f5deb3; /* золотий */
+  color: #f5deb3; 
   text-align: center;
 }
 
@@ -39,7 +39,7 @@
 }
 
 .filled {
-  color: #FFD700; /* яскраво-золотий */
+  color: #FFD700; 
 }
 
 .submitButton {

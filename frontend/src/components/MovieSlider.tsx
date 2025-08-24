@@ -7,8 +7,8 @@ interface Movie {
   id: number;
   title: string;
   description: string;
-  bannerImg: string; // для баннера большая картинка
-  posterImg: string; // для постера
+  bannerImg: string; 
+  posterImg: string; 
   trailer_url?: string; 
 }
 
@@ -16,9 +16,8 @@ const MovieSlider: React.FC = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // Проверка, чтобы избежать ошибки, если posterImg или bannerImg не определены
   const getFullImageUrl = (imageUrl: string) => {
-    if (!imageUrl) return ''; // Если URL не существует, возвращаем пустую строку
+    if (!imageUrl) return ''; 
     const isFullUrl = imageUrl.startsWith('http://') || imageUrl.startsWith('https://');
     return isFullUrl ? imageUrl : `http://localhost:5000/${imageUrl}`;
   };

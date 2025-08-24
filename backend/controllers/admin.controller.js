@@ -21,7 +21,7 @@ exports.getStatistics = async (req, res) => {
   try {
     // Загальні цифри
     const [ticketCount] = await db.query('SELECT COUNT(*) AS total FROM tickets');
-    const [revenue] = await db.query('SELECT SUM(amount) AS revenue FROM payments WHERE status = "completed"');
+    const [revenue] = await db.query('SELECT SUM(amount) AS revenue FROM payments WHERE status = "paid"');
     const [userCount] = await db.query('SELECT COUNT(*) AS total FROM users');
 
     // 1. Кількість користувачів по днях (останній місяць)
@@ -46,7 +46,7 @@ exports.getStatistics = async (req, res) => {
     const [revenueByMonth] = await db.query(`
       SELECT DATE_FORMAT(payment_time, '%Y-%m') AS month, SUM(amount) AS total
       FROM payments
-      WHERE status = 'completed' AND payment_time >= CURDATE() - INTERVAL 1 YEAR
+      WHERE status = 'paid' AND payment_time >= CURDATE() - INTERVAL 1 YEAR
       GROUP BY month
       ORDER BY month
     `);
@@ -68,7 +68,7 @@ exports.getStatistics = async (req, res) => {
     const [avgTicketPrice] = await db.query(`
       SELECT AVG(amount) AS avgPrice
       FROM payments
-      WHERE status = 'completed'
+      WHERE status = 'paid'
     `);
 
     res.json({

@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 const pool = require('../config/db');
 const { generateToken } = require('../utils/jwt');
 
-// 👉 POST /api/auth/register
+// POST /api/auth/register
 const register = async (req, res) => {
   const { name, email, password, dob, phone, avatar_url } = req.body;
 
@@ -34,7 +34,7 @@ const register = async (req, res) => {
   }
 };
 
-// 👉 POST /api/auth/login
+// POST /api/auth/login
 const login = async (req, res) => {
   const { email, password } = req.body;
 
@@ -65,12 +65,12 @@ const login = async (req, res) => {
   }
 };
 
-// 👉 POST /api/auth/logout
+// POST /api/auth/logout
 const logout = (req, res) => {
   res.clearCookie('token').json({ message: 'Logged out' });
 };
 
-// 👉 GET /api/auth/profile
+// GET /api/auth/profile
 const getProfile = async (req, res) => {
   try {
     const [users] = await pool.query(
@@ -124,7 +124,7 @@ const updateProfile = async (req, res) => {
     res.status(500).json({ message: 'Server error', error: err.message });
   }
 };
-// 👉 PUT /api/auth/password
+// PUT /api/auth/password
 const changePassword = async (req, res) => {
   const { currentPassword, newPassword } = req.body;
 
@@ -143,7 +143,7 @@ const changePassword = async (req, res) => {
 };
 
 
-// 👉 DELETE /api/auth/delete
+// DELETE /api/auth/delete
 const deleteUser = async (req, res) => {
   try {
     const [result] = await pool.query('DELETE FROM users WHERE id = ?', [req.user.id]);

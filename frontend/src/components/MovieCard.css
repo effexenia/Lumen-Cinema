@@ -1,33 +1,45 @@
-  /* === MOVIE CARD === */
-  .movie-card {
-    background-color: #1a1a1a;
-    border-radius: 12px;
-    overflow: hidden;
-    color: white;
-    transition: transform 0.3s;
-  }
-  
-  .movie-card:hover {
-    transform: translateY(-5px);
-  }
-  
-  .movie-card__image {
-    width: 100%;
-    height: 260px;
-    object-fit: cover;
-  }
-  
-  .movie-card__info {
-    padding: 10px;
-    font-size: 14px;
-  }
-  
-  .movie-card__info h3 {
-    font-size: 16px;
-    margin: 4px 0;
-  }
-  
-  .movie-card__info p {
-    color: #ccc;
-  }
-  
+.movie-card {
+  background-color: #1a1a1a;
+  border-radius: 12px;
+  overflow: hidden;
+  color: white;
+  transition: transform 0.3s;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.movie-card:hover {
+  transform: translateY(-5px);
+}
+
+.movie-card__image {
+  width: 100%;
+  aspect-ratio: 2/3; 
+  object-fit: cover;
+  display: block;
+}
+
+.movie-card__info {
+  padding: 10px;
+  font-size: 14px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.movie-card__info h3 {
+  font-size: 16px;
+  margin: 4px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.movie-card__info p {
+  color: #ccc;
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.4;
+}

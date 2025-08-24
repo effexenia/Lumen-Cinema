@@ -1,9 +1,6 @@
-// components/ProtectedRoute.tsx
 import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
 
-// Предположим, что ты хранишь текущего пользователя в localStorage или контексте
-// Пример пользователя:
 interface User {
   id: number;
   name: string;
