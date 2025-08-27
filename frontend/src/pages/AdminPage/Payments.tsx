@@ -18,7 +18,6 @@ export const Payments = () => {
           {payments.map(payment => (
             <tr key={payment.id}>
               <td>{payment.id}</td>
-              <td>{payment.ticket_id}</td>
               <td>{payment.amount} ₴</td>
               <td>{payment.status}</td>
               <td>{new Date(payment.payment_time).toLocaleString()}</td>

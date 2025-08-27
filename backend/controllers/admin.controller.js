@@ -66,9 +66,8 @@ exports.getStatistics = async (req, res) => {
 
     // 5. Середня ціна квитка
     const [avgTicketPrice] = await db.query(`
-      SELECT AVG(amount) AS avgPrice
-      FROM payments
-      WHERE status = 'paid'
+      SELECT AVG(price) AS avgPrice
+      FROM sessions
     `);
 
     res.json({

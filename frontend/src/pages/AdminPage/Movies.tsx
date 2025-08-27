@@ -120,8 +120,8 @@ const getInitialData = (): any => {
             { name: 'country', label: 'Країна' },
             { name: 'studio', label: 'Студія' },
             { name: 'trailerUrl', label: 'Трейлер (YouTube)' },
-            { name: 'description', label: 'Опис' },
-            { name: 'summary', label: 'Короткий опис' },
+            { name: 'summary', label: 'Опис' },
+            { name: 'description', label: 'Короткий опис' },
             {
               name: 'genres',
               label: 'Жанри',
